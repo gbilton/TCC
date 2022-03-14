@@ -18,6 +18,8 @@ class Vehicle:
         self.rotation_vel = 4
         self.current_point = 0
         self.radius = 10
+        self.timer = 0
+        self.complete_path = False
 
 
     def draw(self, surface, color):
@@ -33,7 +35,12 @@ class Vehicle:
 
 
     def calculate_angle(self):
-        target_x, target_y = self.path[self.current_point]
+        try:
+            target_x, target_y = self.path[self.current_point]
+        except IndexError:
+            self.complete_path = True
+            exit()
+
         x_diff = target_x - self.x
         y_diff = target_y - self.y
 
@@ -82,4 +89,10 @@ class Vehicle:
         return path
 
 
+    def add_point(self, point):
+        self.path.append(point)
 
+
+    def draw_path(self, surface):
+        for point in self.path[self.current_point:]:
+            circle(surface, (0,0,0), point, 4)
