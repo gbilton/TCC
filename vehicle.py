@@ -1,16 +1,17 @@
 import math
 from typing import List, Tuple
 from pygame.draw import circle
+from pygame.surface import Surface
 import pygame
 
 
 class Vehicle:
-    def __init__(self, start_position, end_position, max_speed, acceleration):
+    def __init__(self, start_position: Tuple[int, int], end_position: Tuple[int, int], max_speed: int, acceleration: float):
         self.speed: float = 0
-        self.start_position: Tuple[int, int] = start_position
-        self.end_position: Tuple[int, int] = end_position
-        self.max_speed: int = max_speed
-        self.acceleration: float = acceleration
+        self.start_position = start_position
+        self.end_position = end_position
+        self.max_speed = max_speed
+        self.acceleration = acceleration
         self.x: float = start_position[0]
         self.y: float = start_position[1]
         self.path: List[Tuple[int, int]] = self.generate_path()
@@ -22,7 +23,7 @@ class Vehicle:
         self.complete_path = False
 
 
-    def draw(self, surface, color):
+    def draw(self, surface: Surface, color: Tuple[int, int, int]):
         position = (self.x, self.y)
         circle(surface, color, position, self.radius)
 
