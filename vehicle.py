@@ -97,3 +97,18 @@ class Vehicle:
     def draw_path(self, surface):
         for point in self.path[self.current_point:]:
             circle(surface, (0,0,0), point, 4)
+
+
+class Car(Vehicle):
+    pass
+        
+
+class Truck(Vehicle):
+    pass
+
+
+class Bike(Vehicle):
+    pass
+            
+
+
