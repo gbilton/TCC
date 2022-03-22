@@ -1,27 +1,31 @@
 import math
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 from pygame.draw import circle
 from pygame.surface import Surface
 import pygame
 
 
 class Vehicle:
-    def __init__(self, start_position: Tuple[int, int], end_position: Tuple[int, int], max_speed: int, acceleration: float):
+    acceleration: float = 4.0
+    rotation_vel: int = 10
+    radius: int = 10
+
+    def __init__(self, path_code: str, path: List[Tuple[int, int]], MAX_SPEED: int):
+        self.path_code = path_code
+        self.path = path
+        self.MAX_SPEED = MAX_SPEED
         self.speed: float = 0
-        self.start_position = start_position
-        self.end_position = end_position
-        self.max_speed = max_speed
-        self.acceleration = acceleration
-        self.x: float = start_position[0]
-        self.y: float = start_position[1]
-        self.path: List[Tuple[int, int]] = self.generate_path()
-        self.angle = 0
-        self.rotation_vel = 4
-        self.current_point = 0
-        self.radius = 10
+        self.x: float = path[0][0]
+        self.y: float = path[0][1]
+        self.current_point: int = 0
+        self.angle: float = 0.0
         self.timer = 0
         self.complete_path = False
 
+
+    def calculate_initial_angle(self):
+        pass
+    
 
     def draw(self, surface: Surface, color: Tuple[int, int, int]):
         position = (self.x, self.y)
@@ -72,7 +76,7 @@ class Vehicle:
 
 
     def move(self):
-        self.speed = min(self.speed + self.acceleration, self.max_speed)
+        self.speed = min(self.speed + self.acceleration, self.MAX_SPEED)
 
         self.calculate_angle()
         self.update_path_point()
@@ -85,11 +89,6 @@ class Vehicle:
         self.x -= horizontal
 
 
-    def generate_path(self):
-        path = [self.start_position, self.end_position]
-        return path
-
-
     def add_point(self, point):
         self.path.append(point)
 
@@ -98,6 +97,18 @@ class Vehicle:
         for point in self.path[self.current_point:]:
             circle(surface, (0,0,0), point, 4)
 
+
+    def detect_traffic(self):
+        pass
+
+    
+    def brake(self):
+        pass
+
+
+    def detect_traffic_light(self):
+        pass
+    
 
 class Car(Vehicle):
     pass

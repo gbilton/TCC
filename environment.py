@@ -1,6 +1,8 @@
-from typing import List
+from tokenize import Triple
+from typing import Dict, List, Tuple
 import pygame
 from pygame.surface import Surface
+from level1 import Level
 
 from vehicle import Vehicle
 from light import TrafficLight
@@ -8,36 +10,46 @@ from utils import TrafficLightState
 
 
 class Environment:
+    pygame.display.set_caption("Semáforo Autônomo")
+
     WIDTH, HEIGHT = 900, 500
     win = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Semáforo Autônomo")
+    
     clock = pygame.time.Clock()
-    render = True
-    FPS = 60
-    WHITE = (255, 255, 255)
+    render: bool = True
+    FPS: int = 60
+
+    vehicles: List[Vehicle] = []
+    lights: List[TrafficLight] = []
+    paths: Dict[str, List[Tuple[int, int]]]
 
 
-    def initialize(self):
-        start_point = (50, 50)
-        end_point = (100, 100)
-        MAX_SPEED = 4
-        ACCELERATION = 1
-        car = Vehicle(start_point, end_point, MAX_SPEED, ACCELERATION)
+    def initialize(self, level):
+        self.paths = level.paths
+
+        MAX_SPEED = level.MAX_SPEED
+        
+        car = Vehicle(path_code="a", path=self.paths["a"], MAX_SPEED=MAX_SPEED)
+        car2 = Vehicle(path_code="b", path=self.paths["b"], MAX_SPEED=MAX_SPEED)
         light = TrafficLight((200, 200), TrafficLightState.green)
-        cars = [car]
-        lights = [light]
-        return cars, lights
+        
+        self.vehicles.append(car)
+        self.vehicles.append(car2)
+        self.lights.append(light)
+
+        return self.vehicles, self.lights
 
 
-    def draw_window(self, win: Surface, vehicles: List[Vehicle], lights: List[TrafficLight]):
-        win.fill(self.WHITE)
+    def draw_window(self):
+        WHITE = (255, 255, 255)
+        self.win.fill(WHITE)
 
-        for vehicle in vehicles:
-            vehicle.draw(win, (0, 116, 204))
-            vehicle.draw_path(win)
+        for vehicle in self.vehicles:
+            vehicle.draw(self.win, (0, 116, 204))
+            vehicle.draw_path(self.win)
 
-        for light in lights:
-            light.draw(win)
+        for light in self.lights:
+            light.draw(self.win)
 
         pygame.display.update()
 

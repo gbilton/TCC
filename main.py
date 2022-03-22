@@ -1,11 +1,13 @@
 import pygame
 
 from environment import Environment
+from level1 import Level1
 
 
 def main():
     env = Environment()
-    vehicles, lights = env.initialize()
+    level = Level1
+    vehicles, lights = env.initialize(level=level)
     run = True
     while run:
         env.clock.tick(env.FPS)
@@ -18,7 +20,7 @@ def main():
         env.step(vehicles, lights)
 
         if env.render:
-            env.draw_window(env.win, vehicles, lights)
+            env.draw_window()
 
     pygame.quit()
 
