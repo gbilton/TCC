@@ -7,8 +7,11 @@ import pygame
 
 class Vehicle:
     acceleration: float = 4.0
+    breaking: float = 1
     rotation_vel: int = 10
     radius: int = 10
+    MIN_SPEED = 0
+    SIGHT_DISTANCE = 50
 
     def __init__(self, path_code: str, path: List[Tuple[int, int]], MAX_SPEED: int):
         self.path_code = path_code
@@ -84,19 +87,25 @@ class Vehicle:
             self.current_point += 1
 
 
-    def move(self):
+    def accelerate(self):
         self.speed = min(self.speed + self.acceleration, self.MAX_SPEED)
+
+
+    def move(self, vehicles):
+        if self.detect_traffic(vehicles):
+            self.brake()
+        else:
+            self.accelerate()
 
         self.calculate_angle()
         self.update_path_point()
-        
+
         radians = math.radians(self.angle)
         vertical = math.cos(radians) * self.speed
         horizontal = math.sin(radians) * self.speed
 
         self.y -= vertical
         self.x -= horizontal
-
 
     def add_point(self, point):
         self.path.append(point)
@@ -108,24 +117,26 @@ class Vehicle:
 
 
     def detect_traffic(self, vehicles):
-        for vehicle in vehicles:
-            if vehicle.path_code == self.path_code:
-                points = self.sight()
-                rect = vehicle.get_rect()
-                for point in points:
-                    if rect.collidepoint(point):
-                        self.brake
+        if vehicles:
+            for vehicle in vehicles:
+                if vehicle.path_code == self.path_code:
+                    points = self.sight()
+                    rect = vehicle.get_rect()
+                    for point in points:
+                        if rect.collidepoint(point):
+                            return True
+                            
+        return False
 
 
     def sight(self):
-        points = list(range(0, 101, 10))
+        points = list(range(0, self.SIGHT_DISTANCE))
         return [(self.x - math.sin(math.radians(self.angle)) * point, self.y - math.cos(math.radians(self.angle)) * point) for point in points]
 
     
     
     def brake(self):
-        pass
-
+        self.speed = max(self.speed - self.breaking, self.MIN_SPEED)
 
     def detect_traffic_light(self):
         pass

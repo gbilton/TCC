@@ -27,10 +27,13 @@ class Environment:
     def initialize(self, level):
         self.paths = level.paths
 
+        car2_path = [(50,50)]
+        car2_path += (self.paths["a"])
         MAX_SPEED = level.MAX_SPEED
         
-        car = Vehicle(path_code="a", path=self.paths["a"], MAX_SPEED=MAX_SPEED)
-        car2 = Vehicle(path_code="b", path=self.paths["b"], MAX_SPEED=MAX_SPEED)
+        car = Vehicle(path_code="a", path=self.paths["a"], MAX_SPEED=1)
+        car2 = Vehicle(path_code="a", path=car2_path, MAX_SPEED=2)
+        # car2 = Vehicle(path_code="b", path=self.paths["b"], MAX_SPEED=MAX_SPEED)
         light = TrafficLight((200, 200), TrafficLightState.green)
         
         self.vehicles.append(car)
@@ -56,7 +59,9 @@ class Environment:
 
     def step(self, vehicles: List[Vehicle], lights: List[TrafficLight]):
         for vehicle in vehicles:
-            vehicle.move()
+            other_vehicles = vehicles[:]
+            other_vehicles.remove(vehicle)
+            vehicle.move(other_vehicles)
             vehicle.timer += 1
 
         for light in lights:
