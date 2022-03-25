@@ -23,6 +23,10 @@ class Vehicle:
         self.complete_path = False
 
 
+    def get_rect(self):
+        return pygame.Rect(self.x - self.radius, self.y-self.radius, self.radius*2, self.radius*2)
+
+    
     def calculate_initial_angle(self):
         pass
     
@@ -30,6 +34,11 @@ class Vehicle:
     def draw(self, surface: Surface, color: Tuple[int, int, int]):
         position = (self.x, self.y)
         circle(surface, color, position, self.radius)
+        # pygame.draw.rect(surface, (255, 0, 0), self.get_rect())
+        points = self.sight()
+
+        for point in points:
+            circle(surface, (0,255, 0), point, 2)
 
 
     def rotate(self, left=False, right=False):
@@ -98,9 +107,21 @@ class Vehicle:
             circle(surface, (0,0,0), point, 4)
 
 
-    def detect_traffic(self):
-        pass
+    def detect_traffic(self, vehicles):
+        for vehicle in vehicles:
+            if vehicle.path_code == self.path_code:
+                points = self.sight()
+                rect = vehicle.get_rect()
+                for point in points:
+                    if rect.collidepoint(point):
+                        self.brake
 
+
+    def sight(self):
+        points = list(range(0, 101, 10))
+        return [(self.x - math.sin(math.radians(self.angle)) * point, self.y - math.cos(math.radians(self.angle)) * point) for point in points]
+
+    
     
     def brake(self):
         pass
