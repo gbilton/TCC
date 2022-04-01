@@ -1,8 +1,6 @@
 from tokenize import Triple
 from typing import Dict, List, Tuple
 import pygame
-from pygame.surface import Surface
-from level1 import Level
 
 from vehicle import Vehicle
 from light import TrafficLight
@@ -32,10 +30,10 @@ class Environment:
         MAX_SPEED = level.MAX_SPEED
         
         car = Vehicle(path_code="a", path=self.paths["a"], MAX_SPEED=1)
-        car2 = Vehicle(path_code="a", path=car2_path, MAX_SPEED=2)
+        car2 = Vehicle(path_code="a", path=car2_path, MAX_SPEED=1.1)
         # car2 = Vehicle(path_code="b", path=self.paths["b"], MAX_SPEED=MAX_SPEED)
-        light = TrafficLight((200, 200), TrafficLightState.green)
-        
+        light = TrafficLight((200, 260), TrafficLightState.green)
+
         self.vehicles.append(car)
         self.vehicles.append(car2)
         self.lights.append(light)
@@ -61,9 +59,9 @@ class Environment:
         for vehicle in vehicles:
             other_vehicles = vehicles[:]
             other_vehicles.remove(vehicle)
-            vehicle.move(other_vehicles)
+            vehicle.move(other_vehicles, lights)
             vehicle.timer += 1
 
         for light in lights:
-            if vehicles[0].timer % 100 == 0:
+            if vehicles[0].timer % 200 == 0:
                 light.change_state()

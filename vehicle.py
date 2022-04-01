@@ -4,14 +4,16 @@ from pygame.draw import circle
 from pygame.surface import Surface
 import pygame
 
+from utils import TrafficLightState
+
 
 class Vehicle:
-    acceleration: float = 4.0
-    breaking: float = 1
+    acceleration: float = 0.01
+    breaking: float = 0.01
     rotation_vel: int = 10
     radius: int = 10
     MIN_SPEED = 0
-    SIGHT_DISTANCE = 50
+    SIGHT_DISTANCE = 75
 
     def __init__(self, path_code: str, path: List[Tuple[int, int]], MAX_SPEED: int):
         self.path_code = path_code
@@ -25,15 +27,12 @@ class Vehicle:
         self.timer = 0
         self.complete_path = False
 
-
     def get_rect(self):
         return pygame.Rect(self.x - self.radius, self.y-self.radius, self.radius*2, self.radius*2)
-
     
     def calculate_initial_angle(self):
         pass
     
-
     def draw(self, surface: Surface, color: Tuple[int, int, int]):
         position = (self.x, self.y)
         circle(surface, color, position, self.radius)
@@ -43,13 +42,11 @@ class Vehicle:
         for point in points:
             circle(surface, (0,255, 0), point, 2)
 
-
     def rotate(self, left=False, right=False):
         if left:
             self.angle += self.rotation_vel
         elif right:
             self.angle -= self.rotation_vel
-
 
     def calculate_angle(self):
         try:
@@ -78,7 +75,6 @@ class Vehicle:
         else:
             self.angle += min(self.rotation_vel, abs(difference_in_angle))
 
-
     def update_path_point(self):
         target = self.path[self.current_point]
         rect = pygame.Rect(
@@ -86,13 +82,26 @@ class Vehicle:
         if rect.collidepoint(*target):
             self.current_point += 1
 
-
     def accelerate(self):
         self.speed = min(self.speed + self.acceleration, self.MAX_SPEED)
 
+    def detect_red_light(self, lights):
+        if lights:
+            for light in lights:
+                points = self.sight()
+                rect = light.get_rect()
+                for point in points:
+                    if rect.collidepoint(point):
+                        if light.state == TrafficLightState.red:
+                            return True
+                        elif light.state == TrafficLightState.yellow and points.index(point) > len(points)/2:
+                            return True
+            return False
 
-    def move(self, vehicles):
+    def move(self, vehicles, lights):
         if self.detect_traffic(vehicles):
+            self.brake()
+        elif self.detect_red_light(lights):
             self.brake()
         else:
             self.accelerate()
@@ -110,11 +119,9 @@ class Vehicle:
     def add_point(self, point):
         self.path.append(point)
 
-
     def draw_path(self, surface):
         for point in self.path[self.current_point:]:
             circle(surface, (0,0,0), point, 4)
-
 
     def detect_traffic(self, vehicles):
         if vehicles:
@@ -124,23 +131,21 @@ class Vehicle:
                     rect = vehicle.get_rect()
                     for point in points:
                         if rect.collidepoint(point):
-                            return True
+                            if abs(vehicle.angle - self.angle) < 10:
+                                return True
                             
         return False
-
 
     def sight(self):
         points = list(range(0, self.SIGHT_DISTANCE))
         return [(self.x - math.sin(math.radians(self.angle)) * point, self.y - math.cos(math.radians(self.angle)) * point) for point in points]
 
-    
-    
     def brake(self):
         self.speed = max(self.speed - self.breaking, self.MIN_SPEED)
 
     def detect_traffic_light(self):
         pass
-    
+
 
 class Car(Vehicle):
     pass

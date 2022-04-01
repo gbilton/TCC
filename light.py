@@ -1,5 +1,6 @@
 from typing import Tuple
 
+import pygame
 from pygame.draw import circle
 
 from utils import TrafficLightState
@@ -26,3 +27,5 @@ class TrafficLight:
         elif self.state == TrafficLightState.red:
             self.state = TrafficLightState.green
 
+    def get_rect(self):
+        return pygame.Rect(self.x - self.radius, self.y-self.radius, self.radius*2, self.radius*2)
