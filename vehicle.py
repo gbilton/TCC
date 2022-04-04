@@ -10,10 +10,11 @@ from utils import TrafficLightState
 class Vehicle:
     acceleration: float = 0.01
     breaking: float = 0.01
-    rotation_vel: int = 10
+    rotation_vel: int = 5
     radius: int = 10
     MIN_SPEED = 0
-    SIGHT_DISTANCE = 75
+    SIGHT_COEF = 50
+    MIN_SIGHT = 15
 
     def __init__(self, path_code: str, path: List[Tuple[int, int]], MAX_SPEED: int):
         self.path_code = path_code
@@ -23,7 +24,7 @@ class Vehicle:
         self.x: float = path[0][0]
         self.y: float = path[0][1]
         self.current_point: int = 0
-        self.angle: float = 0.0
+        self.angle: float = self.calculate_initial_angle()
         self.timer = 0
         self.complete_path = False
 
@@ -31,7 +32,21 @@ class Vehicle:
         return pygame.Rect(self.x - self.radius, self.y-self.radius, self.radius*2, self.radius*2)
     
     def calculate_initial_angle(self):
-        pass
+        target_x, target_y = self.path[1]
+
+
+        x_diff = target_x - self.x
+        y_diff = target_y - self.y
+
+        if y_diff == 0:
+            desired_radian_angle = math.pi / 2
+        else:
+            desired_radian_angle = math.atan(x_diff / y_diff)
+
+        if target_y > self.y:
+            desired_radian_angle += math.pi
+        
+        return math.degrees(desired_radian_angle)
     
     def draw(self, surface: Surface, color: Tuple[int, int, int]):
         position = (self.x, self.y)
@@ -136,8 +151,11 @@ class Vehicle:
                             
         return False
 
+    def get_sight_distance(self):
+        return int(self.SIGHT_COEF * self.speed + self.MIN_SIGHT)
+    
     def sight(self):
-        points = list(range(0, self.SIGHT_DISTANCE))
+        points = list(range(0, self.get_sight_distance()))
         return [(self.x - math.sin(math.radians(self.angle)) * point, self.y - math.cos(math.radians(self.angle)) * point) for point in points]
 
     def brake(self):
