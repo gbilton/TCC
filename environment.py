@@ -54,9 +54,9 @@ class Environment:
             path_code = key
             path = value
 
-            # num_vehicles = random.randrange(1, 10, 1)
+            # num_vehicles = random.randrange(1, 50, 1)
             num_vehicles = 10
-            points = [i*random.normalvariate(50, 5) for i in range(1, num_vehicles+1)]
+            points = [i*100 for i in range(1, num_vehicles+1)]
 
             for i in range(num_vehicles):
 
@@ -66,8 +66,10 @@ class Environment:
                 vehicle = Vehicle(path_code=path_code, path=vehicle_path, MAX_SPEED=level.MAX_SPEED)
                 self.vehicles.append(vehicle)
 
-        light = TrafficLight((200, 250), TrafficLightState.green)
+        light = TrafficLight((400, 250), TrafficLightState.green)
+        light2 = TrafficLight((450, 200), TrafficLightState.red)
         self.lights.append(light)
+        self.lights.append(light2)
 
         return self.vehicles, self.lights
 
@@ -87,6 +89,10 @@ class Environment:
 
 
     def step(self, vehicles: List[Vehicle], lights: List[TrafficLight]):
+        if not vehicles:
+            done = True
+            return done
+
         for vehicle in vehicles:
             if vehicle.complete_path:
                 self.timer += vehicle.total_time
@@ -98,5 +104,6 @@ class Environment:
             vehicle.timer += 1
 
         for light in lights:
-            if vehicles[0].timer % 200 == 0:
                 light.change_state()
+
+        return False

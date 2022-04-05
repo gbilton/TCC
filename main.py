@@ -17,7 +17,11 @@ def main():
             elif event.type == pygame.MOUSEBUTTONUP:
                 vehicles[0].add_point(event.pos)
 
-        env.step(vehicles, lights)
+        done = env.step(vehicles, lights)
+
+        if done:
+            run = False
+            
 
         if env.render:
             env.draw_window()
