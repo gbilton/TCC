@@ -10,7 +10,10 @@ def main():
     vehicles, lights = env.initialize(level=level)
     run = True
     while run:
-        env.clock.tick(env.FPS)
+        if env.render:
+            env.draw_window()
+            env.clock.tick(env.FPS)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -21,10 +24,7 @@ def main():
 
         if done:
             run = False
-            
 
-        if env.render:
-            env.draw_window()
 
     pygame.quit()
 

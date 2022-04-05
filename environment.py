@@ -56,7 +56,7 @@ class Environment:
 
             # num_vehicles = random.randrange(1, 50, 1)
             num_vehicles = 10
-            points = [i*100 for i in range(1, num_vehicles+1)]
+            points = [i*33 for i in range(1, num_vehicles+1)]
 
             for i in range(num_vehicles):
 

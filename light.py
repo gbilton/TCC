@@ -7,18 +7,15 @@ from utils import TrafficLightState
 
 
 class TrafficLight:
-    radius: int = 10
+    radius: int = 3
     timer: int = 0
-    green_time: int = 100
-    yellow_time: int = 50
-    
+    green_time: int = 300
+    yellow_time: int = 100
 
     def __init__(self, position: Tuple[int, int], state: TrafficLightState):
         self.x = position[0]
         self.y = position[1]
         self.state = state
-        
-    
 
     def draw(self, surface):
         position = (self.x, self.y)

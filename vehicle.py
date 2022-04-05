@@ -11,10 +11,10 @@ class Vehicle:
     acceleration: float = 0.01
     breaking: float = 0.1
     rotation_vel: int = 5
-    radius: int = 10
+    radius: int = 3
     MIN_SPEED = 0
-    SIGHT_COEF = 50
-    MIN_SIGHT = 15
+    SIGHT_COEF: float = radius*5
+    MIN_SIGHT: float = radius * 1.5
 
     def __init__(self, path_code: str, path: List[Tuple[int, int]], MAX_SPEED: int):
         self.path_code = path_code
@@ -51,9 +51,12 @@ class Vehicle:
     def draw(self, surface: Surface, color: Tuple[int, int, int]):
         position = (self.x, self.y)
         circle(surface, color, position, self.radius)
-        # pygame.draw.rect(surface, (255, 0, 0), self.get_rect())
-        points = self.sight()
 
+        # Draw rect
+        # pygame.draw.rect(surface, (255, 0, 0), self.get_rect())
+
+        # Draw sight
+        points = self.sight()
         for point in points:
             circle(surface, (0,255, 0), point, 2)
 
