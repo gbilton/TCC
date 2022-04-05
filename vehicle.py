@@ -9,7 +9,7 @@ from utils import TrafficLightState
 
 class Vehicle:
     acceleration: float = 0.01
-    breaking: float = 0.01
+    breaking: float = 0.1
     rotation_vel: int = 5
     radius: int = 10
     MIN_SPEED = 0
@@ -64,12 +64,12 @@ class Vehicle:
             self.angle -= self.rotation_vel
 
     def calculate_angle(self):
-        try:
-            target_x, target_y = self.path[self.current_point]
-        except IndexError:
+        if self.current_point > len(self.path)-1:
             self.complete_path = True
-            exit()
-
+            self.total_time = self.timer
+            return
+        target_x, target_y = self.path[self.current_point]
+        # self.complete_path = True
         x_diff = target_x - self.x
         y_diff = target_y - self.y
 
@@ -91,6 +91,8 @@ class Vehicle:
             self.angle += min(self.rotation_vel, abs(difference_in_angle))
 
     def update_path_point(self):
+        if self.complete_path:
+            return 
         target = self.path[self.current_point]
         rect = pygame.Rect(
             self.x, self.y, self.radius*2, self.radius*2)
@@ -109,7 +111,7 @@ class Vehicle:
                     if rect.collidepoint(point):
                         if light.state == TrafficLightState.red:
                             return True
-                        elif light.state == TrafficLightState.yellow and points.index(point) > len(points)/2:
+                        elif light.state == TrafficLightState.yellow and points.index(point) > len(points)/1.5:
                             return True
             return False
 

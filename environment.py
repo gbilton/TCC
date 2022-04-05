@@ -1,5 +1,7 @@
-from tokenize import Triple
+import math
 from typing import Dict, List, Tuple
+import random
+
 import pygame
 
 from vehicle import Vehicle
@@ -21,21 +23,50 @@ class Environment:
     lights: List[TrafficLight] = []
     paths: Dict[str, List[Tuple[int, int]]]
 
+    timer: float = 0
+
+
+    def calculate_start_point(self, point, path: List[Tuple[int, int]]):
+        start_x, start_y = path[0]
+        target_x, target_y = path[1]
+
+        x_diff = target_x - start_x
+        y_diff = target_y - start_y
+
+        if y_diff == 0:
+            y_diff = -0.01
+            # desired_radian_angle = math.pi / 2
+        
+        desired_radian_angle = math.atan(x_diff / y_diff)
+
+        if target_y > start_y:
+            desired_radian_angle += math.pi
+
+        angle = math.degrees(desired_radian_angle+math.pi)
+        start_point = (start_x - math.sin(math.radians(angle)) *
+                       point, start_y - math.cos(math.radians(angle)) * point)
+        return start_point
 
     def initialize(self, level):
         self.paths = level.paths
 
-        car2_path = [(50,50)]
-        car2_path += (self.paths["a"])
-        MAX_SPEED = level.MAX_SPEED
-        
-        car = Vehicle(path_code="a", path=self.paths["a"], MAX_SPEED=1)
-        car2 = Vehicle(path_code="a", path=car2_path, MAX_SPEED=1.1)
-        # car2 = Vehicle(path_code="b", path=self.paths["b"], MAX_SPEED=MAX_SPEED)
-        light = TrafficLight((200, 260), TrafficLightState.green)
+        for key, value in self.paths.items():
+            path_code = key
+            path = value
 
-        self.vehicles.append(car)
-        self.vehicles.append(car2)
+            # num_vehicles = random.randrange(1, 10, 1)
+            num_vehicles = 10
+            points = [i*random.normalvariate(50, 5) for i in range(1, num_vehicles+1)]
+
+            for i in range(num_vehicles):
+
+                start_point = [self.calculate_start_point(points[i], path)]
+                vehicle_path = start_point + path
+
+                vehicle = Vehicle(path_code=path_code, path=vehicle_path, MAX_SPEED=level.MAX_SPEED)
+                self.vehicles.append(vehicle)
+
+        light = TrafficLight((200, 250), TrafficLightState.green)
         self.lights.append(light)
 
         return self.vehicles, self.lights
@@ -57,6 +88,10 @@ class Environment:
 
     def step(self, vehicles: List[Vehicle], lights: List[TrafficLight]):
         for vehicle in vehicles:
+            if vehicle.complete_path:
+                self.timer += vehicle.total_time
+                vehicles.remove(vehicle)
+                continue
             other_vehicles = vehicles[:]
             other_vehicles.remove(vehicle)
             vehicle.move(other_vehicles, lights)
