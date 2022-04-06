@@ -29,6 +29,7 @@ def main():
 
     pygame.quit()
 
+    print(f"Time average = {env.timer/(env.num_vehicles*len(env.paths)*env.FPS):.2f}s")
 
 if __name__ == "__main__":
     main()

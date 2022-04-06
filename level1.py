@@ -9,7 +9,7 @@ class Level:
     MAX_SPEED: int
 
 class Level1(Level): 
-    MAX_SPEED = 0.5
+    MAX_SPEED = 1
     paths = {
         "a": [(1, 303), (444, 316), (898, 331)],
         "b": [(475, 4), (464, 297), (468, 497)] 

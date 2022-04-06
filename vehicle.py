@@ -14,7 +14,7 @@ class Vehicle:
     radius: float = 10.78
     MIN_SPEED = 0
     SIGHT_COEF: float = radius*5
-    MIN_SIGHT: float = radius * 1.5
+    MIN_SIGHT: float = radius + 4.31
 
     def __init__(self, path_code: str, path: List[Tuple[int, int]], MAX_SPEED: int):
         self.path_code = path_code
@@ -56,9 +56,9 @@ class Vehicle:
         # pygame.draw.rect(surface, (255, 0, 0), self.get_rect())
 
         # Draw sight
-        points = self.sight()
-        for point in points:
-            circle(surface, (0,255, 0), point, 2)
+        # points = self.sight()
+        # for point in points:
+        #     circle(surface, (0,255, 0), point, 2)
 
     def rotate(self, left=False, right=False):
         if left:

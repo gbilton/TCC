@@ -16,7 +16,7 @@ class Environment:
     win = pygame.display.set_mode((WIDTH, HEIGHT))
     
     clock = pygame.time.Clock()
-    render: bool = True
+    render: bool = False
     FPS: int = 60
 
     vehicles: List[Vehicle] = []
@@ -24,11 +24,12 @@ class Environment:
 
     timer: float = 0
 
+    num_vehicles: int = 10
+
     def __init__(self, level):
         self.bg = pygame.image.load(level.image_path)
         self.paths = level.paths
         self.lights = level.lights 
-
 
     def calculate_start_point(self, point, path: List[Tuple[int, int]]):
         start_x, start_y = path[0]
@@ -56,12 +57,11 @@ class Environment:
             path_code = key
             path = value
 
-            num_vehicles = random.randrange(1, 50, 1)
-            # num_vehicles = 10
-            points = [i*33 for i in range(1, (num_vehicles+1)*2)]
-            points = random.sample(points, num_vehicles)
+            # num_vehicles = random.randrange(1, 50, 1)
+            points = [i*33 for i in range(1, (self.num_vehicles+1)*5)]
+            points = random.sample(points, self.num_vehicles)
 
-            for i in range(num_vehicles):
+            for i in range(self.num_vehicles):
 
                 start_point = [self.calculate_start_point(points[i], path)]
                 vehicle_path = start_point + path
@@ -70,7 +70,6 @@ class Environment:
                 self.vehicles.append(vehicle)
 
         return self.vehicles, self.lights
-
 
     def draw_window(self):
         self.win.blit(self.bg, (0, 0))
@@ -82,7 +81,6 @@ class Environment:
             light.draw(self.win)
 
         pygame.display.update()
-
 
     def step(self, vehicles: List[Vehicle], lights: List[TrafficLight]):
         if not vehicles:
@@ -97,7 +95,8 @@ class Environment:
             other_vehicles = vehicles[:]
             other_vehicles.remove(vehicle)
             vehicle.move(other_vehicles, lights)
-            vehicle.timer += 1
+            if vehicle.current_point >= 1:
+                vehicle.timer += 1
 
         for light in lights:
                 light.change_state()
