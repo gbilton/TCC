@@ -5,7 +5,7 @@ from level1 import Level1
 
 
 def main():
-    env = Environment()
+    env = Environment(Level1)
     level = Level1
     vehicles, lights = env.initialize(level=level)
     run = True
@@ -19,6 +19,7 @@ def main():
                 run = False
             elif event.type == pygame.MOUSEBUTTONUP:
                 vehicles[0].add_point(event.pos)
+                print(event.pos)
 
         done = env.step(vehicles, lights)
 

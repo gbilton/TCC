@@ -11,7 +11,7 @@ class Vehicle:
     acceleration: float = 0.01
     breaking: float = 0.1
     rotation_vel: int = 5
-    radius: int = 3
+    radius: float = 10.78
     MIN_SPEED = 0
     SIGHT_COEF: float = radius*5
     MIN_SIGHT: float = radius * 1.5

@@ -20,10 +20,14 @@ class Environment:
     FPS: int = 60
 
     vehicles: List[Vehicle] = []
-    lights: List[TrafficLight] = []
     paths: Dict[str, List[Tuple[int, int]]]
 
     timer: float = 0
+
+    def __init__(self, level):
+        self.bg = pygame.image.load(level.image_path)
+        self.paths = level.paths
+        self.lights = level.lights 
 
 
     def calculate_start_point(self, point, path: List[Tuple[int, int]]):
@@ -48,8 +52,6 @@ class Environment:
         return start_point
 
     def initialize(self, level):
-        self.paths = level.paths
-
         for key, value in self.paths.items():
             path_code = key
             path = value
@@ -67,18 +69,11 @@ class Environment:
                 vehicle = Vehicle(path_code=path_code, path=vehicle_path, MAX_SPEED=level.MAX_SPEED)
                 self.vehicles.append(vehicle)
 
-        light = TrafficLight((400, 250), TrafficLightState.green)
-        light2 = TrafficLight((450, 200), TrafficLightState.red)
-        self.lights.append(light)
-        self.lights.append(light2)
-
         return self.vehicles, self.lights
 
 
     def draw_window(self):
-        WHITE = (255, 255, 255)
-        self.win.fill(WHITE)
-
+        self.win.blit(self.bg, (0, 0))
         for vehicle in self.vehicles:
             vehicle.draw(self.win, (0, 116, 204))
             vehicle.draw_path(self.win)
