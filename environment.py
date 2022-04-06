@@ -54,9 +54,10 @@ class Environment:
             path_code = key
             path = value
 
-            # num_vehicles = random.randrange(1, 50, 1)
-            num_vehicles = 10
-            points = [i*33 for i in range(1, num_vehicles+1)]
+            num_vehicles = random.randrange(1, 50, 1)
+            # num_vehicles = 10
+            points = [i*33 for i in range(1, (num_vehicles+1)*2)]
+            points = random.sample(points, num_vehicles)
 
             for i in range(num_vehicles):
 
