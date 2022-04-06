@@ -16,7 +16,7 @@ class Environment:
     win = pygame.display.set_mode((WIDTH, HEIGHT))
     
     clock = pygame.time.Clock()
-    render: bool = False
+    render: bool = True
     FPS: int = 60
 
     vehicles: List[Vehicle] = []

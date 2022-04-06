@@ -1,11 +1,12 @@
 import pygame
 
 from environment import Environment
-from level1 import Level1
+from levels import Level1, Level2
 
 
 def main():
-    env = Environment(Level1)
+    env = Environment(Level2)
+    
     level = Level1
     vehicles, lights = env.initialize(level=level)
     run = True
