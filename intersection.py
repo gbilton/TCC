@@ -1,25 +1,59 @@
+import math
 import random
 from light import TrafficLight
 from utils import TrafficLightState
 
 
 class Intersection:
-    yellow_time: int = 5 * 60
+    yellow_time: float = 3.0 * 60
     yellow_timer: int = 0
+
+    green_timer: int = 0
+
 
     def __init__(self, main_light: TrafficLight, secondary_light: TrafficLight):
         self.main_light = main_light
         self.secondary_light = secondary_light
         self.change_state: bool = False
+        self.green_time_fps: float = self.calculate_green_time()
 
-    def random_change(self):
+    def state_change(self):
         if not self.change_state:
-            a = random.normalvariate(50, 10)
-            if a > 80:
-                self.change_state = True
-        # self.change_state = True
+            # self.random_change()
+            self.formal_change()
+            # self.ai_change()
         self.sync_lights()
 
+
+    def random_change(self):
+        a = random.normalvariate(50, 10)
+        if a > 75:
+            self.change_state = True
+
+    def ai_change(self):
+        pass
+
+    def calculate_green_time(self):
+        qi: float = 600  # fluxo na aproximação (veículo/h)
+        L: int = 10  # largura da intersecção em metros
+        total_red_time: float = 60
+        perception_time: int = 2  # tempo de percepção: 2 segundos
+
+        green_time = qi/(525*L)*((1.5*(total_red_time + perception_time)+5-total_red_time +
+                                  perception_time)/(1-(qi/(525*L))))+perception_time+(self.yellow_time/60)
+
+        green_time_fps = green_time * 60
+        return green_time_fps
+    
+    def formal_change(self):
+        if self.green_timer >= self.green_time_fps:
+            self.change_state = True
+            self.green_timer = 0
+        else:
+            self.green_timer += 1
+
+        
+        
     def sync_lights(self):
         if not self.change_state:
             return
@@ -35,7 +69,6 @@ class Intersection:
                 self.change_state = False
             else:
                 self.yellow_timer += 1
-                print(self.yellow_timer)
 
         elif self.secondary_light.state == TrafficLightState.green:
             self.secondary_light.state = TrafficLightState.yellow

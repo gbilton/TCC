@@ -6,8 +6,6 @@ import pygame
 from intersection import Intersection
 
 from vehicle import Vehicle
-from light import TrafficLight
-from utils import TrafficLightState
 
 
 class Environment:
@@ -25,7 +23,7 @@ class Environment:
 
     timer: float = 0
 
-    num_vehicles: int = 10
+    num_vehicles: int = 10  # 10 para boa performance, max 22 para não fechar o cruzamento.
 
     def __init__(self, level):
         self.bg = pygame.image.load(level.image_path)
@@ -49,7 +47,6 @@ class Environment:
 
         if y_diff == 0:
             y_diff = -0.01
-            # desired_radian_angle = math.pi / 2
         
         desired_radian_angle = math.atan(x_diff / y_diff)
 
@@ -66,7 +63,6 @@ class Environment:
             path_code = key
             path = value
 
-            # num_vehicles = random.randrange(1, 50, 1)
             points = [i*33 for i in range(1, (self.num_vehicles+1)*5)]
             points = random.sample(points, self.num_vehicles)
 
@@ -108,6 +104,6 @@ class Environment:
                 vehicle.timer += 1
 
         for intersection in intersections:
-            intersection.random_change()
+            intersection.state_change()
 
         return False
