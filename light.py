@@ -21,23 +21,8 @@ class TrafficLight:
         position = (self.x, self.y)
         circle(surface, self.state, position, self.radius)
     
-    def change_state(self):
-        if self.state == TrafficLightState.green:
-            if self.timer == self.green_time:
-                self.change_color()
-                self.timer = 0
-
-        elif self.state == TrafficLightState.yellow:
-            if self.timer == self.yellow_time:
-                self.change_color()
-                self.timer = 0
-                
-        elif self.state == TrafficLightState.red:
-            if self.timer == self.green_time + self.yellow_time:
-                self.change_color()
-                self.timer = 0
-
-        self.timer+=1
+    # def change_state(self):
+    #     self.random_state_change()
 
     def change_color(self):
         if self.state == TrafficLightState.green:
@@ -49,3 +34,10 @@ class TrafficLight:
 
     def get_rect(self):
         return pygame.Rect(self.x - self.radius, self.y-self.radius, self.radius*2, self.radius*2)
+
+
+    def law_state_change(self):
+        pass
+
+    def ai_state_change(self):
+        pass

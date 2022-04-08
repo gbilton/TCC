@@ -1,4 +1,5 @@
 from typing import Dict, List, Tuple
+from intersection import Intersection
 
 from light import TrafficLight
 from utils import TrafficLightState
@@ -35,4 +36,9 @@ class Level2(Level):
         TrafficLight((183, 286), TrafficLightState.red),
         TrafficLight((765, 322), TrafficLightState.green),
         TrafficLight((783, 343), TrafficLightState.red)
+    ]
+
+    intersections: List[Intersection] = [
+        Intersection(main_light=lights[0], secondary_light=lights[1]),
+        Intersection(main_light=lights[2], secondary_light=lights[3])
     ]

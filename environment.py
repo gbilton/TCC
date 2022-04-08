@@ -3,6 +3,7 @@ from typing import Dict, List, Tuple
 import random
 
 import pygame
+from intersection import Intersection
 
 from vehicle import Vehicle
 from light import TrafficLight
@@ -29,7 +30,15 @@ class Environment:
     def __init__(self, level):
         self.bg = pygame.image.load(level.image_path)
         self.paths = level.paths
-        self.lights = level.lights 
+        self.intersections = level.intersections
+        self.lights = level.lights
+    
+    def get_lights(self):
+        lights = []
+        for intersection in self.intersections:
+            lights.append(intersection.main_light)
+            lights.append(intersection.secondary_light)
+        return lights
 
     def calculate_start_point(self, point, path: List[Tuple[int, int]]):
         start_x, start_y = path[0]
@@ -69,7 +78,7 @@ class Environment:
                 vehicle = Vehicle(path_code=path_code, path=vehicle_path, MAX_SPEED=level.MAX_SPEED)
                 self.vehicles.append(vehicle)
 
-        return self.vehicles, self.lights
+        return self.vehicles, self.intersections
 
     def draw_window(self):
         self.win.blit(self.bg, (0, 0))
@@ -82,11 +91,11 @@ class Environment:
 
         pygame.display.update()
 
-    def step(self, vehicles: List[Vehicle], lights: List[TrafficLight]):
+    def step(self, vehicles: List[Vehicle], intersections: List[Intersection]):
         if not vehicles:
             done = True
             return done
-
+        
         for vehicle in vehicles:
             if vehicle.complete_path:
                 self.timer += vehicle.total_time
@@ -94,11 +103,11 @@ class Environment:
                 continue
             other_vehicles = vehicles[:]
             other_vehicles.remove(vehicle)
-            vehicle.move(other_vehicles, lights)
+            vehicle.move(other_vehicles, self.lights)
             if vehicle.current_point >= 1:
                 vehicle.timer += 1
 
-        for light in lights:
-                light.change_state()
+        for intersection in intersections:
+            intersection.random_change()
 
         return False

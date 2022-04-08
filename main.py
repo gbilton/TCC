@@ -8,7 +8,7 @@ def main():
     env = Environment(Level2)
     
     level = Level1
-    vehicles, lights = env.initialize(level=level)
+    vehicles, intersections = env.initialize(level=level)
     run = True
     while run:
         if env.render:
@@ -22,11 +22,10 @@ def main():
                 vehicles[0].add_point(event.pos)
                 print(event.pos)
 
-        done = env.step(vehicles, lights)
+        done = env.step(vehicles, intersections)
 
         if done:
             run = False
-
 
     pygame.quit()
 
