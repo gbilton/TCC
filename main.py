@@ -5,7 +5,7 @@ from levels import Level1, Level2
 
 
 def main():
-    level = Level1
+    level = Level2
     
     env = Environment(level)
     vehicles, intersections = env.initialize(level=level)

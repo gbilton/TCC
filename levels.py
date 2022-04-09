@@ -2,7 +2,7 @@ from typing import Dict, List, Tuple
 from intersection import Intersection
 
 from light import TrafficLight
-from utils import TrafficLightState
+from utils import IncomingTraffic, TrafficLightState
 
 
 class Level:
@@ -18,8 +18,8 @@ class Level1(Level):
     image_path = "images/level 1.png"
 
     lights: List[TrafficLight] = [
-        TrafficLight((444, 316), TrafficLightState.green),
-        TrafficLight((464, 297), TrafficLightState.red)
+        TrafficLight((444, 316), TrafficLightState.green, IncomingTraffic.west),
+        TrafficLight((464, 297), TrafficLightState.red, IncomingTraffic.north)
     ]
 
     intersections: List[Intersection] = [
@@ -36,10 +36,10 @@ class Level2(Level):
     image_path = "images/level 2.png"
 
     lights: List[TrafficLight] = [
-        TrafficLight((165, 305), TrafficLightState.green),
-        TrafficLight((183, 286), TrafficLightState.red),
-        TrafficLight((765, 322), TrafficLightState.green),
-        TrafficLight((783, 343), TrafficLightState.red)
+        TrafficLight((165, 305), TrafficLightState.green, IncomingTraffic.west),
+        TrafficLight((183, 286), TrafficLightState.red, IncomingTraffic.north),
+        TrafficLight((765, 322), TrafficLightState.green, IncomingTraffic.west),
+        TrafficLight((783, 343), TrafficLightState.red, IncomingTraffic.south)
     ]
 
     intersections: List[Intersection] = [

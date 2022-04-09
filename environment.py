@@ -104,6 +104,6 @@ class Environment:
                 vehicle.timer += 1
 
         for intersection in intersections:
-            intersection.state_change()
+            intersection.step(vehicles)
 
         return False
