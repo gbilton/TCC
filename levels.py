@@ -22,6 +22,10 @@ class Level1(Level):
         TrafficLight((464, 297), TrafficLightState.red)
     ]
 
+    intersections: List[Intersection] = [
+        Intersection(main_light=lights[0], secondary_light=lights[1])
+    ]
+
 class Level2(Level):
     MAX_SPEED = 1
     paths = {
