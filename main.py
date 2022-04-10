@@ -1,3 +1,4 @@
+from typing import Dict
 import pygame
 
 from environment import Environment
@@ -5,10 +6,9 @@ from levels import Level1, Level2
 
 
 def main():
-    level = Level1
-    
+    level = Level2
     env = Environment(level)
-    vehicles, intersections, _, done = env.reset(level=level)
+    vehicles, intersections = env.reset(level=level)
     run = True
     while run:
         if env.render:
@@ -22,7 +22,9 @@ def main():
                 vehicles[0].add_point(event.pos)
                 print(event.pos)
 
-        _, _, _, done = env.step()
+
+        actions: Dict[str, int] = {intersection.id: intersection.select_action(vehicles) for intersection in intersections}
+        _, _, _, done = env.step(actions)
 
         if done:
             run = False

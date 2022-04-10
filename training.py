@@ -1,54 +1,66 @@
 from itertools import count
+
+import numpy as np
+import torch
+import torch.nn.functional as F
+
 from environment import Environment
-from intersection import Intersection
 from levels import Level1
+from utils import Experience, extract_tensors
 
-env = Environment()
-level = Level1
 
-# Hyper-parameters
-batch_size = 64
-gamma = 0.99
-target_update = 100
-num_episodes = 100000
-save_checkpoint = 1000
-current_step = 1000000
-limite = 10
+def main():
+    level = Level1
+    env = Environment(level)
+    intersection = level.intersections[0]
+    device = torch.device("cuda")
 
-for episode in range(num_episodes):
-        state = env.reset(level)
-        for timestep in count():
-            action = player.select_action(state)
-            next_state, reward1, reward2, done = env.step(action)
 
-            if done:
-                next_state = np.zeros(len(next_state))
+    # Hyper-parameters
+    batch_size = 64
+    gamma = 0.99
+    target_update = 100
+    num_episodes = 100000
 
-            player.memory.push(Experience(state, action2, next_state, reward2, done))
-            
-            state = next_state
 
-            if player.memory.can_provide_sample(batch_size):
-                experiences = player.memory.sample(batch_size)
+    for episode in range(num_episodes):
+            state = env.reset(level)
+            for timestep in count():
+                action = intersection.select_action(state)
+                next_state, reward, done = env.step({intersection.id:action})
 
-                states, actions2, rewards2, next_states, dones = Tools.extract_tensors(
-                    experiences)
-                rewards = rewards.to(device)
-                current_q_values = player.get_current(states, actions2)
-                next_q_values = player.get_next(next_states)
+                if done:
+                    next_state = np.zeros(len(next_state))
 
-                for idx, next_state in enumerate(next_states):
-                    if dones[idx] == True:
-                        next_q_values[idx] = 0
+                intersection.memory.push(Experience(state, action, next_state, reward, done))
+                
+                state = next_state
 
-                target_q_values = (next_q_values * gamma) + rewards
+                if intersection.memory.can_provide_sample(batch_size):
+                    experiences = intersection.memory.sample(batch_size)
 
-                loss = F.mse_loss(current_q_values,
-                                     target_q_values).to(device)
-                player.optimizer.zero_grad()
-                loss.backward()
-                player.optimizer.step()
+                    states, actions, rewards, next_states, dones = extract_tensors(
+                        experiences)
+                    rewards = rewards.to(device)
+                    current_q_values = intersection.get_current(states, actions)
+                    next_q_values = intersection.get_next(next_states)
 
-        if (episode+1) % target_update == 0:
-            player.update_target_net()
-            print("target net updated")
+                    for idx, next_state in enumerate(next_states):
+                        if dones[idx] == True:
+                            next_q_values[idx] = 0
+
+                    target_q_values = (next_q_values * gamma) + rewards
+
+                    loss = F.mse_loss(current_q_values,
+                                        target_q_values).to(device)
+                    intersection.optimizer.zero_grad()
+                    loss.backward()
+                    intersection.optimizer.step()
+
+            if (episode+1) % target_update == 0:
+                intersection.update_target_net()
+                print("target net updated")
+
+
+if __name__ == "__main__":
+    main()

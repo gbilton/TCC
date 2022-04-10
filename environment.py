@@ -3,7 +3,6 @@ from typing import Dict, List, Tuple
 import random
 
 import pygame
-from intersection import Intersection
 
 from vehicle import Vehicle
 
@@ -74,10 +73,7 @@ class Environment:
                 vehicle = Vehicle(path_code=path_code, path=vehicle_path, MAX_SPEED=level.MAX_SPEED)
                 self.vehicles.append(vehicle)
 
-        reward = 0
-        done = False
-
-        return self.vehicles, self.intersections, reward, done
+        return self.vehicles, self.intersections
 
     def draw_window(self):
         self.win.blit(self.bg, (0, 0))
@@ -90,7 +86,7 @@ class Environment:
 
         pygame.display.update()
 
-    def step(self):
+    def step(self, actions: Dict[str, int]):
         done = False
 
         if not self.vehicles:
@@ -109,7 +105,7 @@ class Environment:
                     vehicle.timer += 1
 
             for intersection in self.intersections:
-                action = intersection.step(self.vehicles)
+                intersection.step(actions[intersection.id])
 
         reward = self.get_reward()
 
