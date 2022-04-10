@@ -1,6 +1,7 @@
-import math
 import random
 from typing import List, Optional
+
+from dqn import DQN
 from light import TrafficLight
 from utils import TrafficLightState
 from vehicle import Vehicle
@@ -17,8 +18,12 @@ class Intersection:
         self.lights = [main_light, secondary_light]
         self.change_state: bool = False
         self.green_time_fps: float = self.calculate_green_time()
+        self.policy_net = DQN()
 
     def step(self, vehicles: Optional[List[Vehicle]] = None):
+        for light in self.lights:
+            light.timer += 1
+
         if not self.change_state:
             # self.random_change()
             # self.formal_change()
@@ -32,10 +37,10 @@ class Intersection:
 
     def ai_change(self, vehicles: List[Vehicle]):
         observation = self.get_observation(vehicles)
-        print(observation)
-        # response = policy_net(observation)
-        # if response == 1:
-        #     self.change_state = True
+        normalized_observation = [i/10 for i in observation]
+        action = self.policy_net.act(normalized_observation)
+        if action == 1:
+            self.change_state = True
 
     def calculate_green_time(self):
         qi: float = 600  # fluxo na aproximação (veículo/h)
@@ -61,25 +66,25 @@ class Intersection:
             return
         
         if self.main_light.state == TrafficLightState.green:
-            self.main_light.state = TrafficLightState.yellow
+            self.main_light.change_color()
             self.yellow_timer = 0
             
         elif self.main_light.state == TrafficLightState.yellow:
             if self.yellow_timer >= self.yellow_time:
-                self.main_light.state = TrafficLightState.red
-                self.secondary_light.state = TrafficLightState.green
+                self.main_light.change_color()
+                self.secondary_light.change_color()
                 self.change_state = False
             else:
                 self.yellow_timer += 1
 
         elif self.secondary_light.state == TrafficLightState.green:
-            self.secondary_light.state = TrafficLightState.yellow
+            self.secondary_light.change_color()
             self.yellow_timer = 0
         
         elif self.secondary_light.state == TrafficLightState.yellow:
             if self.yellow_timer >= self.yellow_time:
-                self.secondary_light.state = TrafficLightState.red
-                self.main_light.state = TrafficLightState.green
+                self.secondary_light.change_color()
+                self.main_light.change_color()
                 self.change_state = False
             else:
                 self.yellow_timer += 1
@@ -89,7 +94,7 @@ class Intersection:
         total_speed = 0
         total_num_red_light_vehicles = 0
         for light in self.lights:
-            num_vehicles, speed, num_red_light_vehicles = light.get_sensor_info(
+            num_vehicles, speed, num_red_light_vehicles, state_timer = light.get_sensor_info(
             vehicles)
             
             total_num_vehicles += num_vehicles
@@ -101,6 +106,6 @@ class Intersection:
         else: 
             total_avg_speed = 0
             
-        observation = [total_num_vehicles, total_avg_speed, num_red_light_vehicles]
+        observation = [total_num_vehicles, total_avg_speed, num_red_light_vehicles, state_timer]
 
         return observation

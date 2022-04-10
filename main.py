@@ -5,10 +5,10 @@ from levels import Level1, Level2
 
 
 def main():
-    level = Level2
+    level = Level1
     
     env = Environment(level)
-    vehicles, intersections = env.initialize(level=level)
+    vehicles, intersections, _, done = env.reset(level=level)
     run = True
     while run:
         if env.render:
@@ -22,7 +22,7 @@ def main():
                 vehicles[0].add_point(event.pos)
                 print(event.pos)
 
-        done = env.step(vehicles, intersections)
+        _, _, _, done = env.step()
 
         if done:
             run = False

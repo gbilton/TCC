@@ -3,7 +3,7 @@ from torch import nn
 
 
 class DQN(nn.Module):
-    def __init__(self, input_size=3, output_size=2,
+    def __init__(self, input_size=4, output_size=2,
                  device=torch.device('cpu')):
         super(DQN, self).__init__()
 
@@ -23,7 +23,6 @@ class DQN(nn.Module):
         return t
 
     def act(self, observation):
-        observation = observation[:-1]
         observation = torch.tensor(
             observation, dtype=torch.float).to(self.device)
         action = self.forward(observation)

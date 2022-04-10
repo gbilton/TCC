@@ -31,8 +31,10 @@ class TrafficLight:
             self.state = TrafficLightState.yellow
         elif self.state == TrafficLightState.yellow:
             self.state = TrafficLightState.red
+            self.timer = 0
         elif self.state == TrafficLightState.red:
             self.state = TrafficLightState.green
+            self.timer = 0
 
     def get_rect(self):
         return pygame.Rect(self.x - self.radius, self.y-self.radius, self.radius*2, self.radius*2)
@@ -57,5 +59,5 @@ class TrafficLight:
                 speed += abs(vehicle.speed)
                 if self.state == TrafficLightState.red:
                     num_red_light_vehicles += 1
-
-        return num_vehicles, speed, num_red_light_vehicles
+        state_time = self.timer/60
+        return num_vehicles, speed, num_red_light_vehicles, state_time
