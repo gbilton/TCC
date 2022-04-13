@@ -4,7 +4,7 @@ from torch import nn
 
 class DQN(nn.Module):
     def __init__(self, input_size=4, output_size=2,
-                 device=torch.device('cpu')):
+                 device=torch.device('cuda')):
         super(DQN, self).__init__()
 
         self.fc1 = nn.Linear(input_size, 100)

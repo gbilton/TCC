@@ -109,7 +109,7 @@ class Environment:
 
         reward = self.get_reward()
 
-        return self.vehicles, self.intersections, reward, done
+        return self.vehicles, reward, done
 
     def get_reward(self):
         if self.num_vehicles*len(self.paths)*self.FPS == 0:

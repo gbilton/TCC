@@ -24,7 +24,9 @@ class TrafficLight:
     def draw(self, surface):
         position = (self.x, self.y)
         circle(surface, self.state, position, self.radius)
-        pygame.draw.rect(surface, (255, 255, 0), self.get_traffic_rect())
+
+        # draw sensor range
+        # pygame.draw.rect(surface, (255, 255, 0), self.get_traffic_rect())
     
     def change_color(self):
         if self.state == TrafficLightState.green:
@@ -41,13 +43,13 @@ class TrafficLight:
 
     def get_traffic_rect(self):
         if self.incoming_traffic_direction == IncomingTraffic.north:
-            return pygame.Rect(self.x - self.radius, self.y-self.radius - self.radar_distance, self.radius*2, self.radar_distance)
+            return pygame.Rect(self.x - self.radius, self.y - self.radius - self.radar_distance, self.radius*2, self.radar_distance)
         elif self.incoming_traffic_direction == IncomingTraffic.south:
-            return pygame.Rect(self.x - self.radius, self.y-self.radius, self.radius*2, self.radar_distance)
+            return pygame.Rect(self.x - self.radius, self.y + self.radius, self.radius*2, self.radar_distance)
         elif self.incoming_traffic_direction == IncomingTraffic.east:
-            return pygame.Rect(self.x - self.radius, self.y-self.radius, self.radar_distance, self.radius*2)
+            return pygame.Rect(self.x + self.radius, self.y - self.radius, self.radar_distance, self.radius*2)
         elif self.incoming_traffic_direction == IncomingTraffic.west:
-            return pygame.Rect(self.x - self.radius - self.radar_distance, self.y-self.radius, self.radar_distance, self.radius*2)
+            return pygame.Rect(self.x - self.radius - self.radar_distance, self.y - self.radius, self.radar_distance, self.radius*2)
 
     def get_sensor_info(self, vehicles: List[Vehicle]):
         num_vehicles = 0 

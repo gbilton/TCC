@@ -24,7 +24,7 @@ def main():
 
 
         actions: Dict[str, int] = {intersection.id: intersection.select_action(vehicles) for intersection in intersections}
-        _, _, _, done = env.step(actions)
+        _, _, done = env.step(actions)
 
         if done:
             run = False
