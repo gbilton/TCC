@@ -1,4 +1,5 @@
-from collections import namedtuple
+# type: ignore
+# flake8: noqa
 
 
 class Player:
@@ -35,9 +36,7 @@ class Player:
         self.hidden_layers = args
 
     def draw(self, win):
-        pygame.draw.rect(
-            win, (255, 255, 255), (self.x, self.y, self.width, self.height)
-        )
+        pygame.draw.rect(win, (255, 255, 255), (self.x, self.y, self.width, self.height))
 
     def key_movement(self, keys):
         if keys[getattr(pygame, self.up_key)]:
@@ -149,44 +148,30 @@ class Ball:
         x = 0
         reward1 = 0
         reward2 = 0
-        if (
-            ball.x + ball.r >= player1.x
-            and ball.x - ball.r <= player1.x + player1.width
-        ):
-            if (
-                ball.y + ball.r >= player1.y
-                and ball.y + ball.r <= player1.y + player1.height
-            ):
+        if ball.x + ball.r >= player1.x and ball.x - ball.r <= player1.x + player1.width:
+            if ball.y + ball.r >= player1.y and ball.y + ball.r <= player1.y + player1.height:
                 collision = True
                 P1 = True
-        if (
-            ball.x - ball.r <= player2.x + player2.width
-            and ball.x + ball.r >= player2.x
-        ):
-            if (
-                ball.y + ball.r >= player2.y
-                and ball.y + ball.r <= player2.y + player2.height
-            ):
+        if ball.x - ball.r <= player2.x + player2.width and ball.x + ball.r >= player2.x:
+            if ball.y + ball.r >= player2.y and ball.y + ball.r <= player2.y + player2.height:
                 collision = True
                 P2 = True
 
         if collision & P1:
             ball.x = player1.x - ball.r
-            if ball.y + ball.r > player1.y and ball.y <= math.floor(
-                player1.y + player1.height / 8
-            ):
+            if ball.y + ball.r > player1.y and ball.y <= math.floor(player1.y + player1.height / 8):
                 x = 1
-            if ball.y > math.floor(
-                player1.y + player1.height / 8
-            ) and ball.y <= math.floor(player1.y + 3 * player1.height / 8):
-                x = 2
-            if ball.y > math.floor(
+            if ball.y > math.floor(player1.y + player1.height / 8) and ball.y <= math.floor(
                 player1.y + 3 * player1.height / 8
-            ) and ball.y <= math.floor(player1.y + 5 * player1.height / 8):
-                x = 3
-            if ball.y > math.floor(
+            ):
+                x = 2
+            if ball.y > math.floor(player1.y + 3 * player1.height / 8) and ball.y <= math.floor(
                 player1.y + 5 * player1.height / 8
-            ) and ball.y <= math.floor(player1.y + 7 * player1.height / 8):
+            ):
+                x = 3
+            if ball.y > math.floor(player1.y + 5 * player1.height / 8) and ball.y <= math.floor(
+                player1.y + 7 * player1.height / 8
+            ):
                 x = 4
             if ball.y > math.floor(
                 player1.y + 7 * player1.height / 8
@@ -195,21 +180,19 @@ class Ball:
             reward1 = 0
         if collision & P2:
             ball.x = player2.x + player2.width + ball.r
-            if ball.y + ball.r > player2.y and ball.y <= math.floor(
-                player2.y + player2.height / 8
-            ):
+            if ball.y + ball.r > player2.y and ball.y <= math.floor(player2.y + player2.height / 8):
                 x = 1
-            if ball.y > math.floor(
-                player2.y + player2.height / 8
-            ) and ball.y <= math.floor(player2.y + 3 * player2.height / 8):
-                x = 2
-            if ball.y > math.floor(
+            if ball.y > math.floor(player2.y + player2.height / 8) and ball.y <= math.floor(
                 player2.y + 3 * player2.height / 8
-            ) and ball.y <= math.floor(player2.y + 5 * player2.height / 8):
-                x = 3
-            if ball.y > math.floor(
+            ):
+                x = 2
+            if ball.y > math.floor(player2.y + 3 * player2.height / 8) and ball.y <= math.floor(
                 player2.y + 5 * player2.height / 8
-            ) and ball.y <= math.floor(player2.y + 7 * player2.height / 8):
+            ):
+                x = 3
+            if ball.y > math.floor(player2.y + 5 * player2.height / 8) and ball.y <= math.floor(
+                player2.y + 7 * player2.height / 8
+            ):
                 x = 4
             if ball.y > math.floor(
                 player2.y + 7 * player2.height / 8
@@ -234,9 +217,7 @@ class EpsilonGreedyStrategy:
         self.decay = decay
 
     def get_exploration_rate(self, current_step):
-        return self.end + (self.start - self.end) * math.exp(
-            -1 * current_step * self.decay
-        )
+        return self.end + (self.start - self.end) * math.exp(-1 * current_step * self.decay)
 
 
 class ReplayBuffer:

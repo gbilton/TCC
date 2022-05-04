@@ -2,7 +2,7 @@ from typing import Dict
 import pygame
 
 from environment import Environment
-from levels import Level1, Level2
+from levels import Level2
 
 
 def main():
@@ -25,8 +25,7 @@ def main():
                 print(event.pos)
 
         actions: Dict[str, int] = {
-            intersection.id: intersection.random_action(vehicles)
-            for intersection in intersections
+            intersection.id: intersection.random_action(vehicles) for intersection in intersections
         }
         _, _, done = env.step(actions)
 

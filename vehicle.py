@@ -1,5 +1,5 @@
 import math
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 from pygame.draw import circle
 from pygame.surface import Surface
 import pygame
@@ -143,7 +143,7 @@ class Vehicle:
         self.path.append(point)
 
     def draw_path(self, surface):
-        for point in self.path[self.current_point :]:
+        for point in self.path[self.current_point:]:
             circle(surface, (0, 0, 0), point, 4)
 
     def detect_traffic(self, vehicles):

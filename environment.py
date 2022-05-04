@@ -42,7 +42,7 @@ class Environment:
         target_x, target_y = path[1]
 
         x_diff = target_x - start_x
-        y_diff = target_y - start_y
+        y_diff: float = target_y - start_y
 
         if y_diff == 0:
             y_diff = -0.01

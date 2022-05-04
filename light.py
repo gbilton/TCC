@@ -80,7 +80,7 @@ class TrafficLight:
 
     def get_sensor_info(self, vehicles: List[Vehicle]):
         num_vehicles = 0
-        speed = 0
+        speed = 0.0
         num_red_light_vehicles = 0
         for vehicle in vehicles:
             if self.traffic_rect.colliderect(vehicle.get_rect()):
