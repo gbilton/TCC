@@ -3,8 +3,7 @@ from torch import nn
 
 
 class DQN(nn.Module):
-    def __init__(self, input_size=4, output_size=2,
-                 device=torch.device('cuda')):
+    def __init__(self, input_size=4, output_size=2, device=torch.device("cuda")):
         super(DQN, self).__init__()
 
         self.fc1 = nn.Linear(input_size, 100)
@@ -23,7 +22,6 @@ class DQN(nn.Module):
         return t
 
     def act(self, observation):
-        observation = torch.tensor(
-            observation, dtype=torch.float).to(self.device)
+        observation = torch.tensor(observation, dtype=torch.float).to(self.device)
         action = self.forward(observation)
         return action.argmax().item()

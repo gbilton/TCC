@@ -12,7 +12,7 @@ class Environment:
 
     WIDTH, HEIGHT = 900, 500
     win = pygame.display.set_mode((WIDTH, HEIGHT))
-    
+
     clock = pygame.time.Clock()
     render: bool = True
     FPS: int = 60
@@ -46,15 +46,17 @@ class Environment:
 
         if y_diff == 0:
             y_diff = -0.01
-        
+
         desired_radian_angle = math.atan(x_diff / y_diff)
 
         if target_y > start_y:
             desired_radian_angle += math.pi
 
-        angle = math.degrees(desired_radian_angle+math.pi)
-        start_point = (start_x - math.sin(math.radians(angle)) *
-                       point, start_y - math.cos(math.radians(angle)) * point)
+        angle = math.degrees(desired_radian_angle + math.pi)
+        start_point = (
+            start_x - math.sin(math.radians(angle)) * point,
+            start_y - math.cos(math.radians(angle)) * point,
+        )
         return start_point
 
     def reset(self, level):
@@ -62,7 +64,7 @@ class Environment:
             path_code = key
             path = value
 
-            points = [i*33 for i in range(1, (self.num_vehicles+1)*5)]
+            points = [i * 33 for i in range(1, (self.num_vehicles + 1) * 5)]
             points = random.sample(points, self.num_vehicles)
 
             for i in range(self.num_vehicles):
@@ -91,7 +93,7 @@ class Environment:
 
         if not self.vehicles:
             done = True
-        
+
         if not done:
             for vehicle in self.vehicles:
                 if vehicle.complete_path:
@@ -112,6 +114,4 @@ class Environment:
         return self.vehicles, reward, done
 
     def get_reward(self):
-        if self.num_vehicles*len(self.paths)*self.FPS == 0:
-            return 0
-        return self.timer/(self.num_vehicles*len(self.paths)*self.FPS)
+        return -1
