@@ -3,8 +3,8 @@ from typing import List, Tuple
 import pygame
 from pygame.draw import circle
 
-from utils import IncomingTraffic, TrafficLightState
-from vehicle import Vehicle
+from helper.utils import IncomingTraffic, TrafficLightState
+from simulation.vehicle import Vehicle
 
 
 class TrafficLight:
@@ -29,7 +29,6 @@ class TrafficLight:
     def draw(self, surface):
         position = (self.x, self.y)
         circle(surface, self.state, position, self.radius)
-
         # draw sensor range
         # pygame.draw.rect(surface, (255, 255, 0), self.get_traffic_rect())
 

@@ -1,8 +1,8 @@
 from typing import Dict
 import pygame
 
-from environment import Environment
-from levels import Level2
+from simulation.environment import Environment
+from simulation.levels import Level2
 
 
 def main():

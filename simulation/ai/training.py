@@ -4,9 +4,9 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from environment import Environment
-from levels import Level1
-from utils import Experience, extract_tensors, np_to_torch
+from simulation.environment import Environment
+from simulation.levels import Level1
+from helper.utils import Experience, extract_tensors, np_to_torch
 
 
 def main():

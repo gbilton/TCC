@@ -4,7 +4,7 @@ from pygame.draw import circle
 from pygame.surface import Surface
 import pygame
 
-from utils import TrafficLightState
+from helper.utils import TrafficLightState
 
 
 class Vehicle:

@@ -4,12 +4,12 @@ from uuid import uuid1
 
 import torch
 
-from dqn import DQN
-from greedy import EpsilonGreedyStrategy
-from light import TrafficLight
-from replaybuffer import ReplayBuffer
-from utils import TrafficLightState
-from vehicle import Vehicle
+from simulation.ai.dqn import DQN
+from simulation.ai.greedy import EpsilonGreedyStrategy
+from simulation.light import TrafficLight
+from simulation.ai.replaybuffer import ReplayBuffer
+from helper.utils import TrafficLightState
+from simulation.vehicle import Vehicle
 
 
 class Intersection:
@@ -72,12 +72,7 @@ class Intersection:
             qi
             / (525 * L)
             * (
-                (
-                    1.5 * (total_red_time + perception_time)
-                    + 5
-                    - total_red_time
-                    + perception_time
-                )
+                (1.5 * (total_red_time + perception_time) + 5 - total_red_time + perception_time)
                 / (1 - (qi / (525 * L)))
             )
             + perception_time
