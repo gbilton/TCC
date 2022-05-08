@@ -1,4 +1,6 @@
 from typing import Dict
+from uuid import UUID
+
 import pygame
 
 from simulation.environment import Environment
@@ -8,11 +10,12 @@ from simulation.levels import Level2
 def main():
     level = Level2
     env = Environment(level)
-    vehicles, intersections = env.reset(level=level)
     run = True
+    vehicles, intersections = env.reset(level=level)
     timestep = 0
     while run:
         timestep += 1
+
         if env.render:
             env.draw_window()
             env.clock.tick(env.FPS)
@@ -24,7 +27,7 @@ def main():
                 vehicles[0].add_point(event.pos)
                 print(event.pos)
 
-        actions: Dict[str, int] = {
+        actions: Dict[UUID, int] = {
             intersection.id: intersection.random_action(vehicles) for intersection in intersections
         }
         _, _, done = env.step(actions)

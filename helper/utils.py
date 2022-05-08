@@ -5,7 +5,7 @@ from typing import Tuple
 import torch
 
 
-class TrafficLightState(Tuple, Enum):
+class TrafficLightState(Tuple[int, int, int], Enum):
     green = (0, 255, 0)
     yellow = (255, 255, 0)
     red = (255, 0, 0)
@@ -35,7 +35,7 @@ def extract_tensors(experiences):
     return (t1, t2, t3, t4, t5)
 
 
-def np_to_torch(state, device):
+def np_to_torch(state, device: torch.device):
     state = torch.tensor(state, dtype=torch.float32)
     # state = torch.reshape(state, (1, len(state)))
     state = state.to(device)

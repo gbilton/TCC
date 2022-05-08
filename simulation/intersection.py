@@ -17,7 +17,6 @@ class Intersection:
     yellow_timer: int = 0
     green_timer: int = 0
     num_actions = 2
-    min_time = 180
 
     def __init__(self, main_light: TrafficLight, secondary_light: TrafficLight):
         self.id = uuid1()
@@ -33,10 +32,16 @@ class Intersection:
         self.optimizer = torch.optim.Adam(params=self.policy_net.parameters(), lr=0.001)
         self.current_step = 0
         self.timer = 0
+        self.min_time = 0
 
     def step(self, action: int):
+        self.timer += 1
+
         for light in self.lights:
             light.timer += 1
+
+        if self.timer < self.min_time:
+            return
 
         if action == 1 or self.change_state:
             self.change_state = True
@@ -46,11 +51,11 @@ class Intersection:
         action = 0
         a = random.normalvariate(50, 10)
         if a > 75:
+            print(a)
             action = 1
         return action
 
     def select_action(self, vehicles: List[Vehicle]) -> int:
-        self.timer += 1
         rate = self.strategy.get_exploration_rate(self.current_step)
         self.current_step += 1
         if rate > random.random():
@@ -92,10 +97,6 @@ class Intersection:
     def sync_lights(self):
         if not self.change_state:
             return
-        if self.timer < self.min_time:
-            return
-        else:
-            self.timer = 0
 
         if self.main_light.state == TrafficLightState.green:
             self.main_light.change_color()
@@ -106,6 +107,7 @@ class Intersection:
                 self.main_light.change_color()
                 self.secondary_light.change_color()
                 self.change_state = False
+                self.timer = 0
             else:
                 self.yellow_timer += 1
 
@@ -118,6 +120,7 @@ class Intersection:
                 self.secondary_light.change_color()
                 self.main_light.change_color()
                 self.change_state = False
+                self.timer = 0
             else:
                 self.yellow_timer += 1
 

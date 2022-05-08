@@ -1,6 +1,7 @@
 import math
 from typing import Dict, List, Tuple
 import random
+from uuid import UUID
 
 import pygame
 
@@ -34,16 +35,15 @@ class Environment:
             points = random.sample(points, self.num_vehicles)
 
             for i in range(self.num_vehicles):
-
-                start_point = [self.calculate_start_point(points[i], path)]
-                vehicle_path = start_point + path
+                start_point = [self._calculate_start_point(points[i], path)]
+                vehicle_path = start_point + path  # type: ignore
 
                 vehicle = Vehicle(path_code=path_code, path=vehicle_path, MAX_SPEED=level.MAX_SPEED)
                 self.vehicles.append(vehicle)
 
         return self.vehicles, self.intersections
 
-    def step(self, actions: Dict[str, int]):
+    def step(self, actions: Dict[UUID, int]):
         done = False
 
         if not self.vehicles:
@@ -75,7 +75,7 @@ class Environment:
             lights.append(intersection.secondary_light)
         return lights
 
-    def calculate_start_point(self, point, path: List[Tuple[int, int]]):
+    def _calculate_start_point(self, point, path: List[Tuple[int, int]]):
         start_x, start_y = path[0]
         target_x, target_y = path[1]
 

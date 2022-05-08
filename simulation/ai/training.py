@@ -36,14 +36,16 @@ def main():
             intersection_observation = torch.reshape(
                 np_to_torch(intersection.get_observation(state), device), (1, 4)
             )
-            action = torch.reshape(torch.tensor([action], dtype=torch.int64, device=device), (1, 1))
+            action = torch.reshape(
+                torch.tensor([action], dtype=torch.int64, device=device), (1, 1)
+            )
             reward = torch.reshape(np_to_torch([reward], device), (1, 1))
             intersection_next_observation = torch.reshape(
                 np_to_torch(intersection.get_observation(next_state), device), (1, 4)
             )
             if done:
                 intersection_next_observation = torch.reshape(
-                    torch.tensor(np.zeros(len(4)), dtype=torch.float32), (1, 4)
+                    torch.tensor(np.zeros(4), dtype=torch.float32), (1, 4)
                 )
             intersection.memory.push(
                 Experience(
@@ -60,7 +62,9 @@ def main():
             if intersection.memory.can_provide_sample(batch_size):
                 experiences = intersection.memory.sample(batch_size)
 
-                states, actions, rewards, next_states, dones = extract_tensors(experiences)
+                states, actions, rewards, next_states, dones = extract_tensors(
+                    experiences
+                )
                 next_q_values = intersection.get_next(next_states)
                 current_q_values = intersection.get_current(states, actions)
 
