@@ -32,16 +32,13 @@ class Intersection:
         self.optimizer = torch.optim.Adam(params=self.policy_net.parameters(), lr=0.001)
         self.current_step = 0
         self.timer = 0
-        self.min_time = 0
+        self.min_time = 60
 
     def step(self, action: int):
         self.timer += 1
 
         for light in self.lights:
             light.timer += 1
-
-        if self.timer < self.min_time:
-            return
 
         if action == 1 or self.change_state:
             self.change_state = True
@@ -51,11 +48,12 @@ class Intersection:
         action = 0
         a = random.normalvariate(50, 10)
         if a > 75:
-            print(a)
             action = 1
         return action
 
     def select_action(self, vehicles: List[Vehicle]) -> int:
+        if self.timer < self.min_time:
+            return 0
         rate = self.strategy.get_exploration_rate(self.current_step)
         self.current_step += 1
         if rate > random.random():
@@ -87,7 +85,7 @@ class Intersection:
         green_time_fps = green_time * 60
         return green_time_fps
 
-    def formal_change(self):
+    def formal_action(self):
         if self.green_timer >= self.green_time_fps:
             self.change_state = True
             self.green_timer = 0

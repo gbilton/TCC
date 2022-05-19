@@ -47,7 +47,7 @@ class TrafficLight:
             self.x - self.radius, self.y - self.radius, self.radius * 2, self.radius * 2
         )
 
-    def get_traffic_rect(self):
+    def get_traffic_rect(self) -> pygame.Rect:
         if self.incoming_traffic_direction == IncomingTraffic.north:
             return pygame.Rect(
                 self.x - self.radius,
@@ -76,8 +76,10 @@ class TrafficLight:
                 self.radar_distance,
                 self.radius * 2,
             )
+        else:
+            raise Exception("Traffic Direction Unknown.")
 
-    def get_sensor_info(self, vehicles: List[Vehicle]):
+    def get_sensor_info(self, vehicles: List[Vehicle]) -> Tuple[int, float, int, float]:
         num_vehicles = 0
         speed = 0.0
         num_red_light_vehicles = 0

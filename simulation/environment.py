@@ -16,7 +16,7 @@ class Environment:
     render: bool = True
     FPS: int = 60
     timer: float = 0
-    num_vehicles: int = 10  # 10 para boa performance, max 22 para não fechar o cruzamento.
+    num_vehicles: int = 5  # 10 para boa performance, max 22 para não fechar o cruzamento.
     vehicles: List[Vehicle] = []
     paths: Dict[str, List[Tuple[int, int]]]
 
@@ -27,6 +27,7 @@ class Environment:
         self.lights = level.lights
 
     def reset(self, level):
+        self.timer = 0
         for key, value in self.paths.items():
             path_code = key
             path = value
@@ -64,7 +65,7 @@ class Environment:
             for intersection in self.intersections:
                 intersection.step(actions[intersection.id])
 
-        reward = self.get_reward()
+        reward = self.get_reward(done)
 
         return self.vehicles, reward, done
 
@@ -108,5 +109,8 @@ class Environment:
 
         pygame.display.update()
 
-    def get_reward(self):
-        return -1
+    def get_reward(self, done) -> float:
+        if done:
+            return -1 * self.timer / (self.num_vehicles * len(self.paths) * self.FPS)
+        else:
+            return 0

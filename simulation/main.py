@@ -4,11 +4,11 @@ from uuid import UUID
 import pygame
 
 from simulation.environment import Environment
-from simulation.levels import Level2
+from simulation.levels import Level1, Level2
 
 
 def main():
-    level = Level2
+    level = Level1
     env = Environment(level)
     run = True
     vehicles, intersections = env.reset(level=level)
