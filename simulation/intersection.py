@@ -28,8 +28,8 @@ class Intersection:
         self.policy_net = DQN()
         self.target_net = DQN()
         self.memory = ReplayBuffer(1000000)
-        self.strategy = EpsilonGreedyStrategy(start=1, end=0.003, decay=0.0001)
-        self.optimizer = torch.optim.Adam(params=self.policy_net.parameters(), lr=0.001)
+        self.strategy = EpsilonGreedyStrategy(start=1, end=0.001, decay=0.0001)
+        self.optimizer = torch.optim.Adam(params=self.policy_net.parameters(), lr=0.0001)
         self.current_step = 0
         self.timer = 0
         self.min_time = 60
@@ -161,3 +161,8 @@ class Intersection:
 
     def update_target_net(self):
         self.target_net.load_state_dict(self.policy_net.state_dict())
+
+    def load_model(self, model_path):
+        checkpoint = torch.load(model_path)
+        self.policy_net.load_state_dict(checkpoint["policy_net"])
+        self.optimizer.load_state_dict(checkpoint["optimizer"])

@@ -13,6 +13,11 @@ def main():
     run = True
     vehicles, intersections = env.reset(level=level)
     timestep = 0
+
+    for intersection in intersections:
+        intersection.load_model("simulation/ai/models/model.tar")
+        intersection.policy_net.eval()
+
     while run:
         timestep += 1
 
@@ -28,7 +33,7 @@ def main():
                 print(event.pos)
 
         actions: Dict[UUID, int] = {
-            intersection.id: intersection.random_action(vehicles) for intersection in intersections
+            intersection.id: intersection.select_action(vehicles) for intersection in intersections
         }
         _, _, done = env.step(actions)
 
