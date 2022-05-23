@@ -28,8 +28,8 @@ class Intersection:
         self.policy_net = DQN()
         self.target_net = DQN()
         self.memory = ReplayBuffer(1000000)
-        self.strategy = EpsilonGreedyStrategy(start=1, end=0.001, decay=0.0001)
-        self.optimizer = torch.optim.Adam(params=self.policy_net.parameters(), lr=0.0001)
+        self.strategy = EpsilonGreedyStrategy(start=1, end=0.003, decay=0.0001)
+        self.optimizer = torch.optim.Adam(params=self.policy_net.parameters(), lr=0.003)
         self.current_step = 0
         self.timer = 0
         self.min_time = 60
@@ -44,7 +44,11 @@ class Intersection:
             self.change_state = True
             self.sync_lights()
 
-    def random_action(self, vehicles) -> int:
+    def method(self, method_name: str, *args):
+        foo = getattr(self, method_name)
+        return foo(*args)
+
+    def random_action(self, *args) -> int:
         action = 0
         a = random.normalvariate(50, 10)
         if a > 75:
@@ -85,7 +89,7 @@ class Intersection:
         green_time_fps = green_time * 60
         return green_time_fps
 
-    def formal_action(self):
+    def formal_action(self, *args):
         if self.green_timer >= self.green_time_fps:
             self.change_state = True
             self.green_timer = 0

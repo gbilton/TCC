@@ -1,13 +1,14 @@
-from typing import Dict
+from typing import Callable, Dict
 from uuid import UUID
 
 import pygame
 
 from simulation.environment import Environment
+from simulation.intersection import Intersection
 from simulation.levels import Level1, Level2
 
 
-def main():
+def main(method: Callable):
     level = Level1
     env = Environment(level)
     run = True
@@ -33,7 +34,7 @@ def main():
                 print(event.pos)
 
         actions: Dict[UUID, int] = {
-            intersection.id: intersection.select_action(vehicles) for intersection in intersections
+            intersection.id: method(vehicles) for intersection in intersections
         }
         _, _, done = env.step(actions)
 
@@ -47,4 +48,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(Intersection.random_action)

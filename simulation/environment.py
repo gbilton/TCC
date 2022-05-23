@@ -113,4 +113,4 @@ class Environment:
         if done:
             return -1 * self.timer / (self.num_vehicles * len(self.paths) * self.FPS)
         else:
-            return 0
+            return -1

@@ -18,11 +18,11 @@ def main():
     device = torch.device("cuda")
 
     # Hyper-parameters
-    batch_size = 64
+    batch_size = 512
     gamma = 0.99
     target_update = 100
     num_episodes = 100000
-    K = 10
+    K = 4
 
     losses = []
     scores = np.array([])
@@ -50,7 +50,7 @@ def main():
                 env.draw_window()
                 # env.clock.tick(env.FPS)
             action = intersection.select_action(state)
-            for timestep in range(K):
+            for _ in range(K):
                 next_state, reward, done = env.step({intersection.id: action})
                 action = 0
                 if done:
@@ -104,7 +104,7 @@ def main():
                 if done:
                     losses.append(loss.item())
                     scores = np.append(scores, score)
-                    if episode % 5 == 0:
+                    if episode % 20 == 0:
                         np.save("results/losses.npy", losses)
                         np.save("results/scores.npy", scores)
                     break
@@ -117,15 +117,19 @@ def main():
             if not current_record:
                 current_record = np.average(scores[-10:])
             if np.average(scores[-10:]) >= current_record:
-                torch.save(
-                    {
-                        "policy_net": intersection.policy_net.state_dict(),
-                        "optimizer": intersection.optimizer.state_dict(),
-                        "memory": intersection.memory.memory,
-                    },
-                    "simulation/ai/models/model.tar",
-                )
-                print("UPDATED SAVED POLICY!")
+                try:
+                    torch.save(
+                        {
+                            "policy_net": intersection.policy_net.state_dict(),
+                            "optimizer": intersection.optimizer.state_dict(),
+                            "memory": intersection.memory.memory,
+                        },
+                        "simulation/ai/models/model.tar",
+                    )
+                    print("UPDATED SAVED POLICY!")
+                except Exception as e:
+                    raise Exception(e)
+
                 current_record = np.average(scores[-10:])
 
 
