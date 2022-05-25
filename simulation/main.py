@@ -11,13 +11,14 @@ from simulation.levels import Level1, Level2
 def main(method: Callable):
     level = Level1
     env = Environment(level)
+    env.render = False
     run = True
     vehicles, intersections = env.reset(level=level)
     timestep = 0
 
-    for intersection in intersections:
-        intersection.load_model("simulation/ai/models/model.tar")
-        intersection.policy_net.eval()
+    # for intersection in intersections:
+    #     intersection.load_model("simulation/ai/models/model.tar")
+    #     intersection.policy_net.eval()
 
     while run:
         timestep += 1
@@ -34,7 +35,7 @@ def main(method: Callable):
                 print(event.pos)
 
         actions: Dict[UUID, int] = {
-            intersection.id: method(vehicles) for intersection in intersections
+            intersection.id: intersection.random_action(vehicles) for intersection in intersections
         }
         _, _, done = env.step(actions)
 
