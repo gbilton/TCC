@@ -126,7 +126,7 @@ def main():
                         },
                         "simulation/ai/models/model.tar",
                     )
-                    print("UPDATED SAVED POLICY!")
+                    print(f"UPDATED SAVED POLICY! - Current Record = {current_record}")
                 except Exception as e:
                     raise Exception(e)
 
