@@ -114,5 +114,8 @@ class Environment:
             return -1 * self.timer / (self.num_vehicles * len(self.paths) * self.FPS)
         else:
             speeds = [vehicle.speed for vehicle in self.vehicles]
-            avg_speed = sum(speeds) / len(speeds)
+            if len(speeds) == 0:
+                avg_speed = 0
+            else:
+                avg_speed = sum(speeds) / len(speeds)
             return avg_speed
