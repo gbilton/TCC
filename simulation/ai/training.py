@@ -56,8 +56,6 @@ def main():
                 if done:
                     break
 
-            score += reward
-
             intersection_observation = torch.reshape(
                 np_to_torch(intersection.get_observation(state), device), (1, 4)
             )
@@ -67,6 +65,7 @@ def main():
                 np_to_torch(intersection.get_observation(next_state), device), (1, 4)
             )
             if done:
+                score += reward
                 print(f"Reward = {reward.item()}")
                 intersection_next_observation = torch.reshape(
                     torch.tensor(np.zeros(4), dtype=torch.float32, device=device), (1, 4)
