@@ -18,11 +18,11 @@ def main():
     device = torch.device("cuda")
 
     # Hyper-parameters
-    batch_size = 512
+    batch_size = 64
     gamma = 0.99
-    target_update = 100
+    target_update = 10
     num_episodes = 100000
-    K = 4
+    K = 10
 
     losses = []
     scores = np.array([])

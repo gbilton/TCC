@@ -27,9 +27,9 @@ class Intersection:
         self.green_time_fps: float = self.calculate_green_time()
         self.policy_net = DQN()
         self.target_net = DQN()
-        self.memory = ReplayBuffer(1000000)
-        self.strategy = EpsilonGreedyStrategy(start=1, end=0.003, decay=0.0001)
-        self.optimizer = torch.optim.Adam(params=self.policy_net.parameters(), lr=0.003)
+        self.memory = ReplayBuffer(100000)
+        self.strategy = EpsilonGreedyStrategy(start=1, end=0.01, decay=0.0001)
+        self.optimizer = torch.optim.Adam(params=self.policy_net.parameters(), lr=0.001)
         self.current_step = 0
         self.timer = 0
         self.min_time = 60

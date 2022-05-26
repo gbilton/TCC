@@ -32,9 +32,9 @@ class Environment:
             path_code = key
             path = value
 
-            points = [i * 33 for i in range(1, (self.num_vehicles + 1) * 5)]
-            points = random.sample(points, self.num_vehicles)
-
+            # points = [i * 33 for i in range(1, (self.num_vehicles + 1) * 5)]
+            # points = random.sample(points, self.num_vehicles)
+            points = [330, 627, 792, 165, 660]
             for i in range(self.num_vehicles):
                 start_point = [self._calculate_start_point(points[i], path)]
                 vehicle_path = start_point + path  # type: ignore
@@ -113,4 +113,6 @@ class Environment:
         if done:
             return -1 * self.timer / (self.num_vehicles * len(self.paths) * self.FPS)
         else:
-            return -1
+            speeds = [vehicle.speed for vehicle in self.vehicles]
+            avg_speed = sum(speeds) / len(speeds)
+            return avg_speed
