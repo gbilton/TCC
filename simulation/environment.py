@@ -32,9 +32,9 @@ class Environment:
             path_code = key
             path = value
 
-            # points = [i * 33 for i in range(1, (self.num_vehicles + 1) * 5)]
-            # points = random.sample(points, self.num_vehicles)
-            points = [330, 627, 792, 165, 660]
+            points = [i * 33 for i in range(1, (self.num_vehicles + 1) * 5)]
+            points = random.sample(points, self.num_vehicles)
+            # points = [330, 627, 792, 165, 660]
             for i in range(self.num_vehicles):
                 start_point = [self._calculate_start_point(points[i], path)]
                 vehicle_path = start_point + path  # type: ignore

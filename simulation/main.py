@@ -8,17 +8,23 @@ from simulation.intersection import Intersection
 from simulation.levels import Level1, Level2
 
 
-def main(method: Callable):
-    level = Level1
+def main(num_vehicles, level, method: Callable):
+    pygame.init()
+    if not level:
+        level = Level2
     env = Environment(level)
+    if not num_vehicles:
+        env.num_vehicles = num_vehicles
     env.render = False
     run = True
     vehicles, intersections = env.reset(level=level)
     timestep = 0
 
-    # for intersection in intersections:
-    #     intersection.load_model("simulation/ai/models/model.tar")
-    #     intersection.policy_net.eval()
+    if method == "act":
+        for intersection in intersections:
+            intersection.load_model("simulation/ai/models/model.tar")
+            intersection.policy_net.eval()
+            K = 10
 
     while run:
         timestep += 1
@@ -35,18 +41,36 @@ def main(method: Callable):
                 print(event.pos)
 
         actions: Dict[UUID, int] = {
-            intersection.id: intersection.random_action(vehicles) for intersection in intersections
+            intersection.id: intersection.method(method, vehicles) for intersection in intersections
         }
-        _, _, done = env.step(actions)
+
+        if method == "act":
+            for _ in range(K):
+                _, _, done = env.step(actions)
+                if env.render:
+                    env.draw_window()
+                    env.clock.tick(env.FPS)
+                for key, value in actions.items():
+                    actions[key] = 0
+                if done:
+                    break
+        else:
+            _, _, done = env.step(actions)
 
         if done:
             print("timestep: ", timestep)
             run = False
 
-    pygame.quit()
+    # pygame.quit()
 
     print(f"Time average = {env.timer/(env.num_vehicles*len(env.paths)*env.FPS):.2f}s")
+    return env.timer / (env.num_vehicles * len(env.paths) * env.FPS)
 
 
 if __name__ == "__main__":
-    main(Intersection.random_action)
+    main("act")
+    main("act")
+    main("formal_action")
+    main("formal_action")
+    main("random_action")
+    main("random_action")

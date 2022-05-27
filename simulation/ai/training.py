@@ -121,7 +121,6 @@ def main():
                         {
                             "policy_net": intersection.policy_net.state_dict(),
                             "optimizer": intersection.optimizer.state_dict(),
-                            "memory": intersection.memory.memory,
                         },
                         "simulation/ai/models/model.tar",
                     )

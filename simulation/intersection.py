@@ -28,8 +28,8 @@ class Intersection:
         self.policy_net = DQN()
         self.target_net = DQN()
         self.memory = ReplayBuffer(100000)
-        self.strategy = EpsilonGreedyStrategy(start=1, end=0.01, decay=0.0001)
-        self.optimizer = torch.optim.Adam(params=self.policy_net.parameters(), lr=0.001)
+        self.strategy = EpsilonGreedyStrategy(start=1, end=0.003, decay=0.0001)
+        self.optimizer = torch.optim.Adam(params=self.policy_net.parameters(), lr=0.00001)
         self.current_step = 0
         self.timer = 0
         self.min_time = 60
@@ -68,6 +68,10 @@ class Intersection:
             # exploit
             with torch.no_grad():
                 return self.policy_net.act(observation)
+
+    def act(self, vehicles):
+        observation = self.get_observation(vehicles)
+        return self.policy_net.act(observation)
 
     def calculate_green_time(self):
         qi: float = 600  # fluxo na aproximação (veículo/h)

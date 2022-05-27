@@ -48,7 +48,7 @@ def main():
     graphs = [graph_1, graph_2]
     color_map = {
         "random_action": "blue",
-        "select_action": "green",
+        "act": "green",
         "formal_action": "red",
     }
     for i, graph in enumerate(graphs):
