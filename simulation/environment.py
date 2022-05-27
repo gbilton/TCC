@@ -28,6 +28,7 @@ class Environment:
 
     def reset(self, level):
         self.timer = 0
+        self.vehicles = []
         for key, value in self.paths.items():
             path_code = key
             path = value
@@ -113,9 +114,24 @@ class Environment:
         if done:
             return -1 * self.timer / (self.num_vehicles * len(self.paths) * self.FPS)
         else:
-            speeds = [vehicle.speed for vehicle in self.vehicles]
-            if len(speeds) == 0:
-                avg_speed = 0
-            else:
-                avg_speed = sum(speeds) / len(speeds)
-            return avg_speed
+            # speeds = [vehicle.speed for vehicle in self.vehicles]
+            # if len(speeds) == 0:
+            #     avg_speed = 0
+            # else:
+            #     avg_speed = sum(speeds) / len(speeds)
+            # return avg_speed
+            # avg_speed = 0
+            # red_light_vehicles = 0
+            # for intersection in self.intersections:
+            #     (
+            #         _,
+            #         observed_avg_speed,
+            #         observed_red_light_vehicles,
+            #         _,
+            #     ) = intersection.get_observation(self.vehicles)
+
+            # avg_speed += observed_avg_speed
+            # red_light_vehicles += observed_red_light_vehicles
+
+            # return avg_speed - red_light_vehicles
+            return 0

@@ -73,7 +73,6 @@ class Vehicle:
             self.total_time = self.timer
             return
         target_x, target_y = self.path[self.current_point]
-        # self.complete_path = True
         x_diff = target_x - self.x
         y_diff = target_y - self.y
 

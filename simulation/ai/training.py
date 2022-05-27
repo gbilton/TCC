@@ -13,7 +13,7 @@ from helper.utils import Experience, extract_tensors, np_to_torch
 def main():
     level = Level1
     env = Environment(level)
-    env.render = False
+    env.render = True
     intersection = level.intersections[0]
     device = torch.device("cuda")
 
