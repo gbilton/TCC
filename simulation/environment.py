@@ -114,24 +114,18 @@ class Environment:
         if done:
             return -1 * self.timer / (self.num_vehicles * len(self.paths) * self.FPS)
         else:
-            # speeds = [vehicle.speed for vehicle in self.vehicles]
-            # if len(speeds) == 0:
-            #     avg_speed = 0
-            # else:
-            #     avg_speed = sum(speeds) / len(speeds)
-            # return avg_speed
-            # avg_speed = 0
-            # red_light_vehicles = 0
-            # for intersection in self.intersections:
-            #     (
-            #         _,
-            #         observed_avg_speed,
-            #         observed_red_light_vehicles,
-            #         _,
-            #     ) = intersection.get_observation(self.vehicles)
+            reward = 0
+            # punishment for vehicles on red light with no vehicles on green
+            for intersection in self.intersections:
+                total_vehicles = 0
+                total_red_vehicles = 0
+                for light in intersection.lights:
+                    num_vehicles, _, num_red_light_vehicles, _ = light.get_sensor_info(
+                        self.vehicles
+                    )
+                    total_vehicles += num_vehicles
+                    total_red_vehicles += num_red_light_vehicles
 
-            # avg_speed += observed_avg_speed
-            # red_light_vehicles += observed_red_light_vehicles
-
-            # return avg_speed - red_light_vehicles
-            return 0
+            if total_vehicles != 0 and total_vehicles == total_red_vehicles:
+                reward = -1
+            return reward
