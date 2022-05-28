@@ -8,7 +8,7 @@ from simulation.intersection import Intersection
 from simulation.levels import Level1, Level2
 
 
-def main(num_vehicles, level, method: Callable):
+def main(num_vehicles, level, method: str):
     pygame.init()
     if not level:
         level = Level2
@@ -24,7 +24,7 @@ def main(num_vehicles, level, method: Callable):
         for intersection in intersections:
             intersection.load_model("simulation/ai/models/model.tar")
             intersection.policy_net.eval()
-            K = 10
+            K = 60
 
     while run:
         timestep += 1
@@ -58,19 +58,21 @@ def main(num_vehicles, level, method: Callable):
             _, _, done = env.step(actions)
 
         if done:
-            print("timestep: ", timestep)
+            # print("timestep: ", timestep)
             run = False
 
     # pygame.quit()
 
-    print(f"Time average = {env.timer/(env.num_vehicles*len(env.paths)*env.FPS):.2f}s")
+    # print(f"Time average = {env.timer/(env.num_vehicles*len(env.paths)*env.FPS):.2f}s")
     return env.timer / (env.num_vehicles * len(env.paths) * env.FPS)
 
 
 if __name__ == "__main__":
-    main("act")
-    main("act")
-    main("formal_action")
-    main("formal_action")
-    main("random_action")
-    main("random_action")
+    main(5, Level1, "act")
+    main(5, Level1, "act")
+
+    main(5, Level1, "formal_action")
+    main(5, Level1, "formal_action")
+
+    main(5, Level1, "random_action")
+    main(5, Level1, "random_action")

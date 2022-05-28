@@ -71,7 +71,8 @@ class Intersection:
 
     def act(self, vehicles):
         observation = self.get_observation(vehicles)
-        return self.policy_net.act(observation)
+        with torch.no_grad():
+            return self.policy_net.act(observation)
 
     def calculate_green_time(self):
         qi: float = 600  # fluxo na aproximação (veículo/h)

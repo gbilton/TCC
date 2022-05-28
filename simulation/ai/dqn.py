@@ -9,6 +9,7 @@ class DQN(nn.Module):
         self.fc1 = nn.Linear(input_size, 100)
         self.fc2 = nn.Linear(100, 100)
         self.fc3 = nn.Linear(100, 100)
+        self.fc4 = nn.Linear(100, 100)
         self.out = nn.Linear(100, output_size)
 
         self.device = device
@@ -18,6 +19,7 @@ class DQN(nn.Module):
         t = torch.tanh(self.fc1(t))
         t = torch.tanh(self.fc2(t))
         t = torch.tanh(self.fc3(t))
+        t = torch.tanh(self.fc4(t))
         t = self.out(t)
         return t
 

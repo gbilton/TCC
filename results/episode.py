@@ -14,9 +14,9 @@ def episode(num_vehicles, level, method):
     vehicles, intersections = env.reset(level=level)
     timestep = 0
 
-    # for intersection in intersections:
-    #     intersection.load_model("simulation/ai/models/model.tar")
-    #     intersection.policy_net.eval()
+    for intersection in intersections:
+        intersection.load_model("simulation/ai/models/model.tar")
+        intersection.policy_net.eval()
 
     while run:
         timestep += 1

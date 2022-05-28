@@ -116,6 +116,8 @@ def main():
             if not current_record:
                 current_record = np.average(scores[-10:])
             if np.average(scores[-10:]) >= current_record:
+                with open("results/records.txt", "a") as f:
+                    f.write(f"Episode: {episode}, Record: {current_record}\n")
                 try:
                     torch.save(
                         {
