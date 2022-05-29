@@ -174,4 +174,5 @@ class Intersection:
     def load_model(self, model_path):
         checkpoint = torch.load(model_path)
         self.policy_net.load_state_dict(checkpoint["policy_net"])
+        self.target_net.load_state_dict(checkpoint["policy_net"])
         self.optimizer.load_state_dict(checkpoint["optimizer"])
