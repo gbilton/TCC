@@ -54,6 +54,12 @@ def graph(graphs: List[Any]):
         "act": "green",
         "formal_action": "red",
     }
+    method_map = {
+        "random_action": "Método Aleatório",
+        "act": "Método Inteligente",
+        "formal_action": "Método Tradicional",
+    }
+
     for i, graph in enumerate(graphs):
         plt.figure(i)
         methods = sorted(list(set([data["method"] for data in graph["data"]])))
@@ -61,7 +67,7 @@ def graph(graphs: List[Any]):
             x = [point["number of cars"] for point in graph["data"] if point["method"] == method]
             y = [point["score"] for point in graph["data"] if point["method"] == method]
             color = color_map[method]
-            plt.scatter(x, y, color=color, label=method)
+            plt.scatter(x, y, color=color, label=method_map[method], alpha=0.9)
         plt.legend()
         plt.xlabel(graph["x_label"])
         plt.ylabel(graph["y_label"])
@@ -79,43 +85,43 @@ def main():
     graph_1 = graph_all(
         results=results,
         x_label="Número de veículos por trajetória",
-        y_label="Tempo médio",
-        title="Comparativo de performance entre métodos para controle semafórico",
+        y_label="Tempo médio (s)",
+        title="Comparativo da performance entre métodos para controle semafórico",
     )
 
     graph_2 = graph_all(
         results=level1_results,
         x_label="Número de veículos por trajetória",
-        y_label="Tempo médio",
-        title="Comparativo de performance entre métodos para controle semafórico no mapa 1",
+        y_label="Tempo médio (s)",
+        title="Comparativo da performance entre métodos para controle semafórico no mapa 1",
     )
 
     graph_3 = graph_all(
         results=level2_results,
         x_label="Número de veículos por trajetória",
-        y_label="Tempo médio",
-        title="Comparativo de performance entre métodos para controle semafórico no mapa 2",
+        y_label="Tempo médio (s)",
+        title="Comparativo da performance entre métodos para controle semafórico no mapa 2",
     )
 
     graph_4 = graph_average(
         results=results,
         x_label="Número de veículos por trajetória",
-        y_label="Tempo médio",
+        y_label="Tempo médio (s)",
         title="Média dos resultados",
     )
 
     graph_5 = graph_average(
         results=level1_results,
         x_label="Número de veículos por trajetória",
-        y_label="Tempo médio",
-        title="Média dos resultados Nível 1",
+        y_label="Tempo médio (s)",
+        title="Média dos resultados por método, para o Nível 1",
     )
 
     graph_6 = graph_average(
         results=level2_results,
         x_label="Número de veículos por trajetória",
-        y_label="Tempo médio",
-        title="Média dos resultados Nível 2",
+        y_label="Tempo médio (s)",
+        title="Média dos resultados por método, para o Nível 2",
     )
 
     graphs = [graph_1, graph_2, graph_3, graph_4, graph_5, graph_6]

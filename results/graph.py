@@ -4,7 +4,7 @@ import numpy as np
 
 scores = np.load("results/scores.npy")
 
-scores = [score for i, score in enumerate(scores) if score > -200]
+scores = [score for i, score in enumerate(scores) if score > -200 and i <= 4000]
 running_average = []
 for i, score in enumerate(scores):
     lower_limit = i - 100
