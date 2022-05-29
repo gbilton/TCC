@@ -1,16 +1,14 @@
 import pickle
+from typing import Any, List
 import matplotlib.pyplot as plt
 
 
-def main():
-    with open("results/results", "rb") as f:
-        results = pickle.load(f)
-
+def graph_all(results, x_label, y_label, title):
     graph_1 = {
         "data": [],
-        "x_label": "Number of Vehicles",
-        "y_label": "Score",
-        "title": "Gráfico 1",
+        "x_label": x_label,
+        "y_label": y_label,
+        "title": title,
     }
     for result in results:
         graph_1["data"].append(
@@ -20,15 +18,18 @@ def main():
                 "method": result["method"],
             }
         )
+    return graph_1
 
+
+def graph_average(results, x_label, y_label, title):
     number_of_cars = sorted(list(set([result["number of cars"] for result in results])))
     methods = sorted(list(set([result["method"] for result in results])))
 
     graph_2 = {
         "data": [],
-        "x_label": "Number of Vehicles",
-        "y_label": "Score",
-        "title": "Gráfico 2",
+        "x_label": x_label,
+        "y_label": y_label,
+        "title": title,
     }
     for n in number_of_cars:
         for m in methods:
@@ -44,8 +45,10 @@ def main():
                     "method": m,
                 }
             )
+    return graph_2
 
-    graphs = [graph_1, graph_2]
+
+def graph(graphs: List[Any]):
     color_map = {
         "random_action": "blue",
         "act": "green",
@@ -65,6 +68,58 @@ def main():
         plt.title(graph["title"])
 
     plt.show()
+
+
+def main():
+    with open("results/results", "rb") as f:
+        results = pickle.load(f)
+    level1_results = [result for result in results if result["level"] == "Level1"]
+    level2_results = [result for result in results if result["level"] == "Level2"]
+
+    graph_1 = graph_all(
+        results=results,
+        x_label="Número de veículos por trajetória",
+        y_label="Tempo médio",
+        title="Comparativo de performance entre métodos para controle semafórico",
+    )
+
+    graph_2 = graph_all(
+        results=level1_results,
+        x_label="Número de veículos por trajetória",
+        y_label="Tempo médio",
+        title="Comparativo de performance entre métodos para controle semafórico no mapa 1",
+    )
+
+    graph_3 = graph_all(
+        results=level2_results,
+        x_label="Número de veículos por trajetória",
+        y_label="Tempo médio",
+        title="Comparativo de performance entre métodos para controle semafórico no mapa 2",
+    )
+
+    graph_4 = graph_average(
+        results=results,
+        x_label="Número de veículos por trajetória",
+        y_label="Tempo médio",
+        title="Média dos resultados",
+    )
+
+    graph_5 = graph_average(
+        results=level1_results,
+        x_label="Número de veículos por trajetória",
+        y_label="Tempo médio",
+        title="Média dos resultados Nível 1",
+    )
+
+    graph_6 = graph_average(
+        results=level2_results,
+        x_label="Número de veículos por trajetória",
+        y_label="Tempo médio",
+        title="Média dos resultados Nível 2",
+    )
+
+    graphs = [graph_1, graph_2, graph_3, graph_4, graph_5, graph_6]
+    graph(graphs)
 
 
 if __name__ == "__main__":
